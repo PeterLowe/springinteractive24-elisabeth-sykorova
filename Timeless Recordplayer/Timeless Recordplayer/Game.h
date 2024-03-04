@@ -41,6 +41,9 @@ private:
 	sf::Sprite m_logoSprite; // sprite used for sfml logo
 	bool m_exitGame; // control exiting game
 	Album albums[ALBUM_NUM];
+
+	int albumScatterX = 5;
+	int albumScatterY = 15;
 	
 
 };

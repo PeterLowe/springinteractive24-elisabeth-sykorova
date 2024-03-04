@@ -23,7 +23,7 @@ Game::Game() :
 
 	for (int index = 0; index < ALBUM_NUM; index++)
 	{
-		albums[index].setup(50.0f + (index * 10), 250.0f - (index * 10));
+		albums[index].setup(50.0f + (index * albumScatterX), 250.0f - (index * albumScatterY));
 	}
 
 }

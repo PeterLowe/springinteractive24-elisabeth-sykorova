@@ -20,7 +20,9 @@ Game::Game() :
 {
 	setupFontAndText(); // load font 
 	setupSprite(); // load textur
+
 	album1.setup(50.0f, 350.0f);
+	album2.setup(60.0f, 340.0f);
 
 }
 
@@ -114,6 +116,7 @@ void Game::render()
 	//m_window.draw(m_welcomeMessage);
 	//m_window.draw(m_logoSprite);
 	/*m_window.draw(m_angledAlbum);*/
+	m_window.draw(album2.m_angledAlbum);
 	m_window.draw(album1.m_angledAlbum);
 	m_window.display();
 }

@@ -19,8 +19,8 @@ Game::Game() :
 	m_exitGame{false} //when true game will exit
 {
 	setupFontAndText(); // load font 
-	setupSprite(); // load texture
-	setupAlbum(50.0f, 350.0f);
+	setupSprite(); // load textur
+	album1.setup(50.0f, 350.0f);
 
 }
 
@@ -113,7 +113,8 @@ void Game::render()
 	m_window.clear(sf::Color::White);
 	//m_window.draw(m_welcomeMessage);
 	//m_window.draw(m_logoSprite);
-	m_window.draw(m_angledAlbum);
+	/*m_window.draw(m_angledAlbum);*/
+	m_window.draw(album1.m_angledAlbum);
 	m_window.display();
 }
 
@@ -151,21 +152,4 @@ void Game::setupSprite()
 	m_logoSprite.setPosition(300.0f, 180.0f);
 }
 
-void Game::setupAlbum(float t_firstPointX, float t_firstPointY)
-{
-	int sideSize = 150; // x, size of album (x^2)
-	sf::Vector2f firstPoint = { t_firstPointX, t_firstPointY }; // coordinates of top left point
-	int angleBy = 15; // tilt in y axis
-
-	m_angledAlbum.setPointCount(m_pointCount);
-
-	// shape A,B,C,D
-	m_angledAlbum.setPoint(0, sf::Vector2f(firstPoint)); // A
-	m_angledAlbum.setPoint(1, sf::Vector2f((firstPoint.x + sideSize), (firstPoint.y + angleBy))); // B
-	m_angledAlbum.setPoint(2, sf::Vector2f((firstPoint.x + sideSize), (firstPoint.y + sideSize + angleBy))); // C
-	m_angledAlbum.setPoint(3, sf::Vector2f(firstPoint.x, (firstPoint.y + sideSize))); // D
-
-	m_angledAlbum.setFillColor(sf::Color::Magenta);
-
-}
 

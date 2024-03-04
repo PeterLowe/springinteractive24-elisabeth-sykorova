@@ -9,6 +9,7 @@
 /// Don't forget the endif at the bottom
 /// </summary>
 #include <SFML/Graphics.hpp>
+#include "Album.h"
 
 class Game
 {
@@ -29,7 +30,7 @@ private:
 	
 	void setupFontAndText();
 	void setupSprite();
-	void setupAlbum(float t_firstPointX, float t_firstPointY);
+	//void setupAlbum(float t_firstPointX, float t_firstPointY);
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_ArialBlackfont; // font used by message
@@ -37,10 +38,7 @@ private:
 	sf::Texture m_logoTexture; // texture used for sfml logo
 	sf::Sprite m_logoSprite; // sprite used for sfml logo
 	bool m_exitGame; // control exiting game
-
-	// album cover - later seperate class
-	sf::ConvexShape m_angledAlbum;
-	int m_pointCount{ 4 };
+	Album album1;
 	
 
 };

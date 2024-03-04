@@ -21,8 +21,10 @@ Game::Game() :
 	setupFontAndText(); // load font 
 	setupSprite(); // load textur
 
-	album1.setup(50.0f, 350.0f);
-	album2.setup(60.0f, 340.0f);
+	for (int index = 0; index < ALBUM_NUM; index++)
+	{
+		albums[index].setup(50.0f + (index * 10), 250.0f - (index * 10));
+	}
 
 }
 
@@ -116,8 +118,13 @@ void Game::render()
 	//m_window.draw(m_welcomeMessage);
 	//m_window.draw(m_logoSprite);
 	/*m_window.draw(m_angledAlbum);*/
-	m_window.draw(album2.m_angledAlbum);
-	m_window.draw(album1.m_angledAlbum);
+
+	for (int index = ALBUM_NUM - 1; index >= 0; index--)
+	{
+		m_window.draw(albums[index].m_angledAlbum);
+	}
+
+
 	m_window.display();
 }
 

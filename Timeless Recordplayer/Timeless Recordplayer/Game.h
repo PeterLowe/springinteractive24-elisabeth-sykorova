@@ -11,6 +11,8 @@
 #include <SFML/Graphics.hpp>
 #include "Album.h"
 
+const int ALBUM_NUM = 10;
+
 class Game
 {
 public:
@@ -38,8 +40,7 @@ private:
 	sf::Texture m_logoTexture; // texture used for sfml logo
 	sf::Sprite m_logoSprite; // sprite used for sfml logo
 	bool m_exitGame; // control exiting game
-	Album album1;
-	Album album2;
+	Album albums[ALBUM_NUM];
 	
 
 };

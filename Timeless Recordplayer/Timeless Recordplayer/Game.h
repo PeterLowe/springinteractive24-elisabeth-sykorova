@@ -42,8 +42,8 @@ private:
 	bool m_exitGame; // control exiting game
 	Album albums[ALBUM_NUM];
 
-	int albumScatterX = 5;
-	int albumScatterY = 15;
+	int albumScatterX = 15;
+	int albumScatterY = 20;
 	
 
 };

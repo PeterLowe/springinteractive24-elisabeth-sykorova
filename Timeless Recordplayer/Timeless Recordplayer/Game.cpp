@@ -168,6 +168,7 @@ void Game::setupSprite()
 
 void Game::processMouseMovement(sf::Event t_event)
 {
+	bool hovering = false;
 	m_mouseEnd.x = static_cast<float>(t_event.mouseMove.x);
 	m_mouseEnd.y = static_cast<float>(t_event.mouseMove.y);
 
@@ -175,11 +176,25 @@ void Game::processMouseMovement(sf::Event t_event)
 
 	for (int index = 0; index < ALBUM_NUM; index++)
 	{
-		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds()))
+		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds()) && hovering != true)
 		{
-			std::cout << "hovering over" << index << std::endl;
+			std::cout << "hovering over" << index + 1<< std::endl;
+			hovering = true;
+
+			//slideUp(albums[index]);
 		}
+
 	}
 }
+
+//void Game::slideUp(Album t_slideAlbum)
+//{
+//	for (int count = 0; count < 10; count++)
+//	{
+//
+//		t_slideAlbum.moveUp();
+//		m_window.draw(t_slideAlbum.m_angledAlbum);
+//	}
+//}
 
 

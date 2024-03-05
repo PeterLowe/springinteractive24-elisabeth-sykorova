@@ -9,6 +9,7 @@ class Album
 public:
 	Album();
 	void setup(float t_firstX, float t_firstY);
+	void moveUp();
 
 	// album cover - later seperate class
 	sf::ConvexShape m_angledAlbum;

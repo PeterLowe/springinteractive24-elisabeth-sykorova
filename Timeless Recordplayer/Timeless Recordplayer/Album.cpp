@@ -28,3 +28,17 @@ void Album::setup(float t_firstX, float t_firstY)
 
 	m_angledAlbum.setFillColor(sf::Color(red, green, blue, opacity));
 }
+
+//void Album::moveUp()
+//{
+//	sf::Vector2f speed = { 0.0f,1.0f };
+//	sf::Vector2f albumPosition = m_angledAlbum.getPosition();
+//	albumPosition += speed;
+//	m_angledAlbum.setPosition(albumPosition);
+// // questionable - up for changes
+//
+//
+//}
+
+
+

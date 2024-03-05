@@ -81,6 +81,10 @@ void Game::processEvents()
 		{
 			processKeys(newEvent);
 		}
+		if (sf::Event::MouseMoved == newEvent.type)
+		{
+			processMouseMovement(newEvent);
+		}
 	}
 }
 
@@ -160,6 +164,22 @@ void Game::setupSprite()
 	}
 	m_logoSprite.setTexture(m_logoTexture);
 	m_logoSprite.setPosition(300.0f, 180.0f);
+}
+
+void Game::processMouseMovement(sf::Event t_event)
+{
+	m_mouseEnd.x = static_cast<float>(t_event.mouseMove.x);
+	m_mouseEnd.y = static_cast<float>(t_event.mouseMove.y);
+
+	m_mouseDot.setPosition(m_mouseEnd);
+
+	for (int index = 0; index < ALBUM_NUM; index++)
+	{
+		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds()))
+		{
+			std::cout << "hovering over" << index << std::endl;
+		}
+	}
 }
 
 

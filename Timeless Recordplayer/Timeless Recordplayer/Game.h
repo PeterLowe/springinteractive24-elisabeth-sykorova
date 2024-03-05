@@ -29,9 +29,10 @@ private:
 	void processKeys(sf::Event t_event);
 	void update(sf::Time t_deltaTime);
 	void render();
-	
+
 	void setupFontAndText();
 	void setupSprite();
+	void processMouseMovement(sf::Event t_event);
 	//void setupAlbum(float t_firstPointX, float t_firstPointY);
 
 	sf::RenderWindow m_window; // main SFML window
@@ -44,6 +45,9 @@ private:
 
 	int albumScatterX = 15;
 	int albumScatterY = 20;
+
+	sf::Vector2f m_mouseEnd;
+	sf::CircleShape m_mouseDot{1.0f};
 	
 
 };

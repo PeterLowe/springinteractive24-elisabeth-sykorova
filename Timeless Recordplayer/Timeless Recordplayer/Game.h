@@ -12,6 +12,7 @@
 #include "Album.h"
 
 const int ALBUM_NUM = 10;
+const int REVEAL_BY = 80;
 
 class Game
 {

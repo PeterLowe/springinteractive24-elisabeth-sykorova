@@ -2,6 +2,8 @@
 /// by Elisabeth Sykorova
 /// March 2024
 /// </summary>
+/// 
+/// NOTES: - variables declared all over the place, in need of re-ordering
 
 #include "Game.h"
 #include <iostream>
@@ -179,10 +181,23 @@ void Game::processMouseMovement(sf::Event t_event)
 		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds()) && hovering != true)
 		{
 			std::cout << "hovering over" << index + 1<< std::endl;
-			hovering = true;
-			albums[index].moveUp();
-		}
 
+			for (int count = 0; count < REVEAL_BY; count++)
+			{
+				albums[index].moveUp();
+				m_window.draw(albums[index].m_angledAlbum);
+			}
+			hovering = true;
+		}
+		else
+		{
+			for (int count = 0; count < REVEAL_BY; count++)
+			{
+				albums[index].moveDown();
+				m_window.draw(albums[index].m_angledAlbum);
+			}
+			hovering = false;
+		}
 	}
 }
 

@@ -14,7 +14,8 @@ void Album::setup(float t_firstX, float t_firstY)
 
 	m_angledAlbum.setPointCount(m_pointCount);
 
-	// shape A,B,C,D
+	// shape A,B,C,D - points set that they are relevant to the first point that's passed
+	// note: angled, so side |AB| should be shorter from this pov
 	m_angledAlbum.setPoint(0, sf::Vector2f(firstPoint)); // A
 	m_angledAlbum.setPoint(1, sf::Vector2f((firstPoint.x + sideSize), (firstPoint.y + angleBy))); // B
 	m_angledAlbum.setPoint(2, sf::Vector2f((firstPoint.x + sideSize), (firstPoint.y + sideSize + angleBy))); // C
@@ -29,21 +30,49 @@ void Album::setup(float t_firstX, float t_firstY)
 	m_angledAlbum.setFillColor(sf::Color(red, green, blue, opacity));
 }
 
+// moves all the points up by 1 pixel
 void Album::moveUp()
 {
-	sf::Vector2f speed = { 0.0f, -1.0f };
+	sf::Vector2f speed = { 0.0f, -0.25f };
 
-
-	for (int point = 0; point < m_pointCount; point++)
+	if (m_revealed != true)
 	{
-		sf::Vector2f albumPoint = m_angledAlbum.getPoint(point);
-		albumPoint += speed;
-		m_angledAlbum.setPoint(point, albumPoint);
+		for (int point = 0; point < m_pointCount; point++)
+		{
+			sf::Vector2f albumPoint = m_angledAlbum.getPoint(point);
+			albumPoint += speed;
+			m_angledAlbum.setPoint(point, albumPoint);
+		}
+
+		m_movedUpCount++;
+		if (m_movedUpCount >= REVEAL_BY) // 40 should be global constant 
+		{
+			m_revealed = true;
+			m_movedDownCount = 0;
+		}
 	}
- // questionable - up for changes
-
-
 }
 
+void Album::moveDown()
+{
+	sf::Vector2f speed = { 0.0f, 0.25f };
+
+	if (m_revealed != false)
+	{
+		for (int point = 0; point < m_pointCount; point++)
+		{
+			sf::Vector2f albumPoint = m_angledAlbum.getPoint(point);
+			albumPoint += speed;
+			m_angledAlbum.setPoint(point, albumPoint);
+		}
+
+		m_movedDownCount++;
+		if (m_movedDownCount >= REVEAL_BY)
+		{
+			m_revealed = false;
+			m_movedUpCount = 0;
+		}
+	}
+}
 
 

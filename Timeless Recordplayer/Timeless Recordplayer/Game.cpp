@@ -180,21 +180,11 @@ void Game::processMouseMovement(sf::Event t_event)
 		{
 			std::cout << "hovering over" << index + 1<< std::endl;
 			hovering = true;
-
-			//slideUp(albums[index]);
+			albums[index].moveUp();
 		}
 
 	}
 }
 
-//void Game::slideUp(Album t_slideAlbum)
-//{
-//	for (int count = 0; count < 10; count++)
-//	{
-//
-//		t_slideAlbum.moveUp();
-//		m_window.draw(t_slideAlbum.m_angledAlbum);
-//	}
-//}
 
 

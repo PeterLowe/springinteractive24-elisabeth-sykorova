@@ -11,8 +11,8 @@
 #include <SFML/Graphics.hpp>
 #include "Album.h"
 
-const int ALBUM_NUM = 10;
-const int REVEAL_BY = 80;
+const int ALBUM_NUM = 6;
+const int REVEAL_BY = 70;
 
 class Game
 {
@@ -35,6 +35,8 @@ private:
 	void setupSprite();
 	void processMouseMovement(sf::Event t_event);
 	//void setupAlbum(float t_firstPointX, float t_firstPointY);
+	void reveal(int t_index);
+	void hide(int t_index);
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_ArialBlackfont; // font used by message
@@ -43,9 +45,10 @@ private:
 	sf::Sprite m_logoSprite; // sprite used for sfml logo
 	bool m_exitGame; // control exiting game
 	Album albums[ALBUM_NUM];
+	int albumBeingRevealed = ALBUM_NUM + 1;
 
 	int albumScatterX = 15;
-	int albumScatterY = 20;
+	int albumScatterY = 30;
 
 	sf::Vector2f m_mouseEnd;
 	sf::CircleShape m_mouseDot{1.0f};

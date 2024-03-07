@@ -4,6 +4,7 @@
 /// </summary>
 /// 
 /// NOTES: - variables declared all over the place, in need of re-ordering
+/// - BUG when hovering over first and unhovering in the direction down
 
 #include "Game.h"
 #include <iostream>
@@ -113,6 +114,8 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		m_window.close();
 	}
+
+	
 }
 
 /// <summary>
@@ -179,27 +182,50 @@ void Game::processMouseMovement(sf::Event t_event)
 
 	for (int index = 0; index < ALBUM_NUM; index++)
 	{
-		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds()) && albums[index].revealed() !=true) // reveals by the predefined amount of pixels (slides up)
+		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds()) && albums[index].revealed() !=true && index < albumBeingRevealed) // reveals by the predefined amount of pixels (slides up)
 		{
 			std::cout << "hovering over" << index + 1<< std::endl;
 
-			for (int count = 0; count < REVEAL_BY; count++)
-			{
-				albums[index].moveUp();
-				m_window.draw(albums[index].m_angledAlbum);
-			}
+			reveal(index);
 			albums[index].setRevealed(true);
-			break;
-		}
-		else if (!(m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds())) && albums[index].revealed() == true) // hides back down 
-		{
-			for (int count = 0; count < REVEAL_BY; count++) 
+			albumBeingRevealed = index;
+			std::cout << "album being revealed: " << albumBeingRevealed + 1<< std::endl;
+
+			for (int hideIndex = 0; hideIndex < ALBUM_NUM; hideIndex++)
 			{
-				albums[index].moveDown();
-				m_window.draw(albums[index].m_angledAlbum);
+	
+				if (albums[hideIndex].revealed() == true && index != hideIndex) // hide any previously revealed albums once a new one is hovered over
+				{
+					hide(hideIndex);
+					albums[hideIndex].setRevealed(false);
+					std::cout << "hiding previously revealed albums " << std::endl;
+				}
 			}
-			albums[index].setRevealed(false);
 		}
+		if (!(m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds())) && albums[index].revealed() == true) // hides back down (if first is revealed)
+		{
+			hide(index);
+			albums[index].setRevealed(false);
+			albumBeingRevealed = ALBUM_NUM + 1;
+		}
+	}
+}
+
+void Game::reveal(int t_index) // moves album up by REVEAL_BY
+{
+	for (int count = 0; count < REVEAL_BY; count++)
+	{
+		albums[t_index].moveUp();
+		render(); // PROBABLY NOT EFFICIENT
+	}
+}
+
+void Game::hide(int t_index) // moves album down by REVEAL_BY
+{
+	for (int count = 0; count < REVEAL_BY; count++)
+	{
+		albums[t_index].moveDown();
+		render(); // PROBABLY NOT EFFICIENT
 	}
 }
 

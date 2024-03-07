@@ -125,6 +125,8 @@ void Game::render()
 	//m_window.draw(m_logoSprite);
 	/*m_window.draw(m_angledAlbum);*/
 
+	//m_window.draw(albums[9].m_angledAlbum); // for debug 
+
 	for (int index = ALBUM_NUM - 1; index >= 0; index--)
 	{
 		m_window.draw(albums[index].m_angledAlbum);
@@ -170,15 +172,14 @@ void Game::setupSprite()
 
 void Game::processMouseMovement(sf::Event t_event)
 {
-	bool hovering = false;
 	m_mouseEnd.x = static_cast<float>(t_event.mouseMove.x);
 	m_mouseEnd.y = static_cast<float>(t_event.mouseMove.y);
 
-	m_mouseDot.setPosition(m_mouseEnd);
+	m_mouseDot.setPosition(m_mouseEnd); // tracking location of mouse to check if it intersects with a vertex
 
 	for (int index = 0; index < ALBUM_NUM; index++)
 	{
-		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds()) && hovering != true)
+		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds()) && albums[index].revealed() !=true) // reveals by the predefined amount of pixels (slides up)
 		{
 			std::cout << "hovering over" << index + 1<< std::endl;
 
@@ -187,16 +188,17 @@ void Game::processMouseMovement(sf::Event t_event)
 				albums[index].moveUp();
 				m_window.draw(albums[index].m_angledAlbum);
 			}
-			hovering = true;
+			albums[index].setRevealed(true);
+			break;
 		}
-		else
+		else if (!(m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds())) && albums[index].revealed() == true) // hides back down 
 		{
-			for (int count = 0; count < REVEAL_BY; count++)
+			for (int count = 0; count < REVEAL_BY; count++) 
 			{
 				albums[index].moveDown();
 				m_window.draw(albums[index].m_angledAlbum);
 			}
-			hovering = false;
+			albums[index].setRevealed(false);
 		}
 	}
 }

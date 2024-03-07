@@ -33,7 +33,7 @@ void Album::setup(float t_firstX, float t_firstY)
 // moves all the points up by 1 pixel
 void Album::moveUp()
 {
-	sf::Vector2f speed = { 0.0f, -0.25f };
+	speed = { 0.0f, -0.25f };
 
 	if (m_revealed != true)
 	{
@@ -43,19 +43,15 @@ void Album::moveUp()
 			albumPoint += speed;
 			m_angledAlbum.setPoint(point, albumPoint);
 		}
-
-		m_movedUpCount++;
-		if (m_movedUpCount >= REVEAL_BY) // 40 should be global constant 
-		{
-			m_revealed = true;
-			m_movedDownCount = 0;
-		}
 	}
+
+
 }
 
 void Album::moveDown()
 {
-	sf::Vector2f speed = { 0.0f, 0.25f };
+	speed = { 0.0f, 0.25f };
+
 
 	if (m_revealed != false)
 	{
@@ -65,14 +61,18 @@ void Album::moveDown()
 			albumPoint += speed;
 			m_angledAlbum.setPoint(point, albumPoint);
 		}
-
-		m_movedDownCount++;
-		if (m_movedDownCount >= REVEAL_BY)
-		{
-			m_revealed = false;
-			m_movedUpCount = 0;
-		}
 	}
+
+}
+
+bool Album::revealed()
+{
+	return m_revealed;
+}
+
+void Album::setRevealed(bool t_isRevealed)
+{
+	m_revealed = t_isRevealed;
 }
 
 

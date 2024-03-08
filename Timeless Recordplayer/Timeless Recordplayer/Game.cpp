@@ -5,6 +5,8 @@
 /// 
 /// NOTES: - variables declared all over the place, in need of re-ordering
 /// - BUG when hovering over first and unhovering in the direction down
+/// REPLACE FOR LOOPS WITH IF
+/// QUADS????
 
 #include "Game.h"
 #include <iostream>
@@ -23,6 +25,8 @@ Game::Game() :
 {
 	setupFontAndText(); // load font 
 	setupSprite(); // load textur
+
+	//albums[0].setupQuadAlbum();
 
 	for (int index = 0; index < ALBUM_NUM; index++)
 	{
@@ -88,6 +92,10 @@ void Game::processEvents()
 		{
 			processMouseMovement(newEvent);
 		}
+		if (sf::Event::MouseButtonPressed == newEvent.type)
+		{
+			processMousePressed(newEvent);
+		}
 	}
 }
 
@@ -135,6 +143,7 @@ void Game::render()
 		m_window.draw(albums[index].m_angledAlbum);
 	}
 
+	//m_window.draw(albums[0].m_quadAlbum, &albums[0].m_albumTexture);
 
 	m_window.display();
 }
@@ -182,9 +191,13 @@ void Game::processMouseMovement(sf::Event t_event)
 
 	for (int index = 0; index < ALBUM_NUM; index++)
 	{
-		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds()) && albums[index].revealed() !=true && index < albumBeingRevealed) // reveals by the predefined amount of pixels (slides up)
+		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds())
+			&& albums[index].revealed() != true
+			&& index < albumBeingRevealed)
+		// reveals by the predefined amount of pixels (slides up)
+		// checks if the mouse is on the album, if the album is not already being revealed, and if the album is not behind the album already being revealed
 		{
-			std::cout << "hovering over" << index + 1<< std::endl;
+			std::cout << "hovering over " << index + 1<< std::endl;
 
 			reveal(index);
 			albums[index].setRevealed(true);
@@ -194,7 +207,8 @@ void Game::processMouseMovement(sf::Event t_event)
 			for (int hideIndex = 0; hideIndex < ALBUM_NUM; hideIndex++)
 			{
 	
-				if (albums[hideIndex].revealed() == true && index != hideIndex) // hide any previously revealed albums once a new one is hovered over
+				if (albums[hideIndex].revealed() == true
+					&& index != hideIndex) // hide any previously revealed albums once a new one is hovered over
 				{
 					hide(hideIndex);
 					albums[hideIndex].setRevealed(false);
@@ -202,7 +216,8 @@ void Game::processMouseMovement(sf::Event t_event)
 				}
 			}
 		}
-		if (!(m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds())) && albums[index].revealed() == true) // hides back down (if first is revealed)
+		if (!(m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds()))
+			&& albums[index].revealed() == true) // hides back down (if first is revealed)
 		{
 			hide(index);
 			albums[index].setRevealed(false);
@@ -225,8 +240,18 @@ void Game::hide(int t_index) // moves album down by REVEAL_BY
 	for (int count = 0; count < REVEAL_BY; count++)
 	{
 		albums[t_index].moveDown();
-		render(); // PROBABLY NOT EFFICIENT
+		render(); // PROBABLY NOT EFFICIENT, replace with if and counter?
 	}
+}
+
+void Game::processMousePressed(sf::Event t_event)
+{
+
+}
+
+void Game::checkHovering(sf::CircleShape t_dot)
+{
+
 }
 
 

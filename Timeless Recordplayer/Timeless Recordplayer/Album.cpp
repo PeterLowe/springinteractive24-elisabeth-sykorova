@@ -21,6 +21,7 @@ void Album::setup(float t_firstX, float t_firstY)
 	m_angledAlbum.setPoint(2, sf::Vector2f((firstPoint.x + sideSize), (firstPoint.y + sideSize + angleBy))); // C
 	m_angledAlbum.setPoint(3, sf::Vector2f(firstPoint.x, (firstPoint.y + sideSize))); // D
 
+
 	int red = (rand() % 256) + 1;
 	int green = (rand() % 256) + 1;
 	int blue = (rand() % 256) + 1;
@@ -28,40 +29,45 @@ void Album::setup(float t_firstX, float t_firstY)
 
 
 	m_angledAlbum.setFillColor(sf::Color(red, green, blue, opacity));
+	// texture
+
+}
+
+void Album::setupQuadAlbum()
+{
+	int sideSize = 210; // x, size of album (x^2)
+	sf::Vector2f firstPoint = { 50.0f, 250.0f }; // coordinates of top left point
+	int angleBy = 20; // tilt in y axis
+	
+
+	//m_quadAlbum[0].position = { 50.0f, 200.0f };
+	//m_quadAlbum[0].texCoords = { 50.0f,200.0f };
+
+	
+	// texture
+
+	if (!m_albumTexture.loadFromFile("ASSETS\\IMAGES\\purpleFoxTown.jpg"))
+	{
+		// simple error message if previous call fails
+		std::cout << "problem loading cover" << std::endl;
+	}
+
+
 }
 
 // moves all the points up by 1 pixel
 void Album::moveUp()
 {
-	speed = { 0.0f, -1.0f };
+	speed = { 0.0f, -0.25f };
 
-	if (m_revealed != true)
-	{
-		for (int point = 0; point < m_pointCount; point++)
-		{
-			sf::Vector2f albumPoint = m_angledAlbum.getPoint(point);
-			albumPoint += speed;
-			m_angledAlbum.setPoint(point, albumPoint);
-		}
-	}
-
-
+	m_angledAlbum.move(speed);
 }
 
 void Album::moveDown()
 {
-	speed = { 0.0f, 1.0f };
+	speed = { 0.0f, 0.25f };
 
-
-	if (m_revealed != false)
-	{
-		for (int point = 0; point < m_pointCount; point++)
-		{
-			sf::Vector2f albumPoint = m_angledAlbum.getPoint(point);
-			albumPoint += speed;
-			m_angledAlbum.setPoint(point, albumPoint);
-		}
-	}
+	m_angledAlbum.move(speed);
 
 }
 

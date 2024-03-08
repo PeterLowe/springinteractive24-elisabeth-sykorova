@@ -12,7 +12,7 @@
 #include "Album.h"
 
 const int ALBUM_NUM = 6;
-const int REVEAL_BY = 70;
+const int REVEAL_BY = 280; // multiplied by speed in album
 
 class Game
 {
@@ -34,6 +34,8 @@ private:
 	void setupFontAndText();
 	void setupSprite();
 	void processMouseMovement(sf::Event t_event);
+	void processMousePressed(sf::Event t_event);
+	void checkHovering(sf::CircleShape t_dot);
 	//void setupAlbum(float t_firstPointX, float t_firstPointY);
 	void reveal(int t_index);
 	void hide(int t_index);
@@ -52,6 +54,9 @@ private:
 
 	sf::Vector2f m_mouseEnd;
 	sf::CircleShape m_mouseDot{1.0f};
+
+	int countReveal = 0;
+	int countHide = 0;
 	
 
 };

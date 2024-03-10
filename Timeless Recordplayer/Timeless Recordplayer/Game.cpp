@@ -30,8 +30,11 @@ Game::Game() :
 
 	for (int index = 0; index < ALBUM_NUM; index++)
 	{
-		albums[index].setup(50.0f + (index * albumScatterX), 250.0f - (index * albumScatterY));
+		albums[index].setupQuadAlbum(50.0f + (index * albumScatterX), 250.0f - (index * albumScatterY));
+		std::cout << "setup " << index << std::endl;
 	}
+
+
 
 }
 
@@ -140,10 +143,8 @@ void Game::render()
 
 	for (int index = ALBUM_NUM - 1; index >= 0; index--)
 	{
-		m_window.draw(albums[index].m_angledAlbum);
+		m_window.draw(albums[index].m_quadAlbum);
 	}
-
-	//m_window.draw(albums[0].m_quadAlbum, &albums[0].m_albumTexture);
 
 	m_window.display();
 }
@@ -228,20 +229,12 @@ void Game::processMouseMovement(sf::Event t_event)
 
 void Game::reveal(int t_index) // moves album up by REVEAL_BY
 {
-	for (int count = 0; count < REVEAL_BY; count++)
-	{
-		albums[t_index].moveUp();
-		render(); // PROBABLY NOT EFFICIENT
-	}
+
 }
 
 void Game::hide(int t_index) // moves album down by REVEAL_BY
 {
-	for (int count = 0; count < REVEAL_BY; count++)
-	{
-		albums[t_index].moveDown();
-		render(); // PROBABLY NOT EFFICIENT, replace with if and counter?
-	}
+
 }
 
 void Game::processMousePressed(sf::Event t_event)

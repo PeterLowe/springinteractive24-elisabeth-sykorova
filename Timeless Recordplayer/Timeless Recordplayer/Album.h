@@ -18,7 +18,7 @@ private:
 public:
 	Album();
 	void setup(float t_firstX, float t_firstY);
-	void setupQuadAlbum();
+	void setupQuadAlbum(float t_firstX, float t_firstY);
 	void moveUp();
 	void moveDown();
 	bool revealed();

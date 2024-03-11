@@ -97,7 +97,6 @@ void Game::processEvents()
 		}
 		if (sf::Event::MouseButtonPressed == newEvent.type)
 		{
-			processMousePressed(newEvent);
 		}
 	}
 }
@@ -126,19 +125,21 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
-	if (revealing == true && albums[albumBeingRevealed].m_movedCount < REVEAL_BY)
+	if (intersecting)
 	{
-		albums[albumBeingRevealed].moveUp();
-		albums[albumBeingRevealed].m_movedCount++;
-	}
-	for (int index = 0; index < ALBUM_NUM; index++)
-	{
-		if (albums[index].m_movedCount > 0 && index != albumBeingRevealed)
+		if (m_moveUpBy < 15)
 		{
-			albums[index].moveDown();
-			albums[index].m_movedCount--;
+			albums[0].moveUp();
+			m_moveUpBy++;
 		}
-
+	}
+	else
+	{
+		if (m_moveUpBy > 0)
+		{
+			albums[0].moveDown();
+			m_moveUpBy--;
+		}
 	}
 
 }
@@ -231,85 +232,19 @@ void Game::processMouseMovement(sf::Event t_event)
 
 	m_mouseDot.setPosition(m_mouseEnd); // tracking location of mouse to check if it intersects with a vertex
 
-	if (revealing != true)
-	{
-		for (int index = 0; index < ALBUM_NUM; index++)
-		{
-			if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getBounds()))
-			{
-				albumBeingRevealed = index;
-				revealing = true;
-				break;
 
-			}
-		}
+	if (m_mouseDot.getGlobalBounds().intersects(albums[0].m_cover.getBounds()))
+	{
+		intersecting = true;
 	}
 	else
 	{
-		if (albums[albumBeingRevealed].m_movedCount >= REVEAL_BY)
-		{
-			revealing = false;
-		}
+		intersecting = false;
 	}
 
-
-
-	//for (int index = 0; index < ALBUM_NUM; index++)
-	//{
-	//	if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds())
-	//		&& albums[index].revealed() != true
-	//		&& index < albumBeingRevealed)
-	//	// reveals by the predefined amount of pixels (slides up)
-	//	// checks if the mouse is on the album, if the album is not already being revealed, and if the album is not behind the album already being revealed
-	//	{
-	//		std::cout << "hovering over " << index + 1<< std::endl;
-
-	//		reveal(index);
-	//		albums[index].setRevealed(true);
-	//		albumBeingRevealed = index;
-	//		std::cout << "album being revealed: " << albumBeingRevealed + 1<< std::endl;
-
-	//		for (int hideIndex = 0; hideIndex < ALBUM_NUM; hideIndex++)
-	//		{
-	//
-	//			if (albums[hideIndex].revealed() == true
-	//				&& index != hideIndex) // hide any previously revealed albums once a new one is hovered over
-	//			{
-	//				hide(hideIndex);
-	//				albums[hideIndex].setRevealed(false);
-	//				std::cout << "hiding previously revealed albums " << std::endl;
-	//			}
-	//		}
-	//	}
-	//	if (!(m_mouseDot.getGlobalBounds().intersects(albums[index].m_angledAlbum.getGlobalBounds()))
-	//		&& albums[index].revealed() == true) // hides back down (if first is revealed)
-	//	{
-	//		hide(index);
-	//		albums[index].setRevealed(false);
-	//		albumBeingRevealed = ALBUM_NUM + 1;
-	//	}
-	//}
 }
 
-void Game::reveal(int t_index) // moves album up by REVEAL_BY
-{
 
-}
-
-void Game::hide(int t_index) // moves album down by REVEAL_BY
-{
-
-}
-
-void Game::processMousePressed(sf::Event t_event)
-{
-
-}
-
-void Game::checkHovering(sf::CircleShape t_dot)
-{
-
-}
 
 
 

@@ -13,7 +13,7 @@
 #include "Record.h"
 
 const int ALBUM_NUM = 6;
-const int REVEAL_BY = 20; // multiplied by speed in album
+const int REVEAL_BY = 30; // multiplied by speed in album
 
 class Game
 {
@@ -35,11 +35,7 @@ private:
 	void setupFontAndText();
 	void setupSprite();
 	void processMouseMovement(sf::Event t_event);
-	void processMousePressed(sf::Event t_event);
-	void checkHovering(sf::CircleShape t_dot);
 	//void setupAlbum(float t_firstPointX, float t_firstPointY);
-	void reveal(int t_index);
-	void hide(int t_index);
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_ArialBlackfont; // font used by message
@@ -63,11 +59,12 @@ private:
 
 	sf::Texture textures[TEXTURES_NUM] = { m_purpleFoxTexture, m_fleetwoodTexture };
 
-
-	bool revealing = false;
+	bool intersecting = false;
 
 
 	Record recordOne;
+
+	int m_moveUpBy = 0;
 	
 
 };

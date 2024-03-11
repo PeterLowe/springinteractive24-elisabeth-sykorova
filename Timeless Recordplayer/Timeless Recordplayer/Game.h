@@ -12,7 +12,7 @@
 #include "Album.h"
 
 const int ALBUM_NUM = 6;
-const int REVEAL_BY = 280; // multiplied by speed in album
+const int REVEAL_BY = 20; // multiplied by speed in album
 
 class Game
 {
@@ -54,11 +54,6 @@ private:
 
 	sf::Vector2f m_mouseEnd;
 	sf::CircleShape m_mouseDot{1.0f};
-
-	int countReveal = 0;
-	int revealBy = 70;
-	int countHide = 0;
-
 
 	const static int TEXTURES_NUM = 2;
 	sf::Texture m_purpleFoxTexture;

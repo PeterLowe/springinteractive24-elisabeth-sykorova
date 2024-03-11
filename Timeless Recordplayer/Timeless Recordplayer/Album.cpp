@@ -59,7 +59,7 @@ void Album::setup(float t_firstX, float t_firstY)
 // moves all the points up by 1 pixel
 void Album::moveUp()
 {
-	speed = { 0.0f, -0.25f };
+	speed = { 0.0f, -3.0f };
 	for (int index = 0; index < 4; index++)
 	{
 		m_cover[index].position += speed;
@@ -69,8 +69,12 @@ void Album::moveUp()
 
 void Album::moveDown()
 {
-	speed = { 0.0f, 0.25f };
+	speed = { 0.0f, 3.0f };
 
+	for (int index = 0; index < 4; index++)
+	{
+		m_cover[index].position += speed;
+	}
 
 }
 

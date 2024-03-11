@@ -10,9 +10,6 @@ class Album
 private:
 	int m_pointCount{ 4 };
 	bool m_revealed = false;
-	int m_movedUpCount = 0;
-	int m_movedDownCount = 0;
-	bool m_moveUp = false;
 	sf::Vector2f speed;
 	
 
@@ -28,6 +25,9 @@ public:
 	sf::VertexArray m_cover {sf::Quads, 4};
 	sf::Texture m_fleetwoodTexture;
 	sf::Texture m_albumTexture;
+
+	int m_movedCount = 0;
+	bool m_moveUp = false;
 
 
 };

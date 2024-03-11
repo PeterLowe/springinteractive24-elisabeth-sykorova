@@ -125,19 +125,18 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		m_window.close();
 	}
-	for (int index = 0; index < ALBUM_NUM; index++)
+
+	for (int index = 0; index < ALBUM_NUM; index++) // reveal and hide alb u
 	{
-		if (albums[index].getMoveUp())
+		if (albums[index].m_moveUp == true && albums[index].m_movedCount < REVEAL_BY)
 		{
-			if (countReveal < revealBy)
-			{
-				albums[index].moveUp();
-				countReveal++;
-			}
-			else
-			{
-				albums[index].setRevealed(true);
-			}
+			albums[index].moveUp();
+			albums[index].m_movedCount++;
+		}
+		else if(albums[index].m_moveUp == false && albums[index].m_movedCount > 0)
+		{
+			albums[index].moveDown();
+			albums[index].m_movedCount--;
 		}
 	}
 
@@ -231,13 +230,13 @@ void Game::processMouseMovement(sf::Event t_event)
 
 	for (int index = 0; index < ALBUM_NUM; index++)
 	{
-		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getBounds()) && albums[index].getRevealed() == false)
+		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getBounds()))
 		{
-			albums[index].setMoveUp(true);
+			albums[index].m_moveUp = true;
 		}
-		else if(albums[index].getRevealed() == true)
+		else
 		{
-			albums[index].setMoveUp(false);
+			albums[index].m_moveUp = false;
 		}
 	}
 

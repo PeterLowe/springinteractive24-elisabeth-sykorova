@@ -56,10 +56,16 @@ private:
 	sf::CircleShape m_mouseDot{1.0f};
 
 	int countReveal = 0;
+	int revealBy = 70;
 	int countHide = 0;
 
-	sf::Texture m_albumTexture;
+
+	const static int TEXTURES_NUM = 2;
+	sf::Texture m_purpleFoxTexture;
 	sf::Texture m_fleetwoodTexture;
+
+	sf::Texture textures[TEXTURES_NUM] = { m_purpleFoxTexture, m_fleetwoodTexture };
+
 	
 
 };

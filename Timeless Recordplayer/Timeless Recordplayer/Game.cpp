@@ -125,6 +125,21 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		m_window.close();
 	}
+	for (int index = 0; index < ALBUM_NUM; index++)
+	{
+		if (albums[index].getMoveUp())
+		{
+			if (countReveal < revealBy)
+			{
+				albums[index].moveUp();
+				countReveal++;
+			}
+			else
+			{
+				albums[index].setRevealed(true);
+			}
+		}
+	}
 
 	
 }
@@ -141,7 +156,7 @@ void Game::render()
 
 	//m_window.draw(albums[9].m_angledAlbum); // for debug 
 
-	if (!m_albumTexture.loadFromFile("ASSETS\\IMAGES\\purpleFoxTown.jpg"))
+	if (!m_purpleFoxTexture.loadFromFile("ASSETS\\IMAGES\\purpleFoxTown.jpg"))
 	{
 		// simple error message if previous call fails
 		std::cout << "problem loading cover" << std::endl;
@@ -158,7 +173,14 @@ void Game::render()
 
 	for (int index = ALBUM_NUM - 1; index >= 0; index--)
 	{
-		m_window.draw(albums[index].m_cover, &m_fleetwoodTexture);
+		if (index % 2 == 0)
+		{
+			m_window.draw(albums[index].m_cover, &m_fleetwoodTexture);
+		}
+		else
+		{
+			m_window.draw(albums[index].m_cover, &m_purpleFoxTexture);
+		}
 	}
 
 
@@ -205,6 +227,21 @@ void Game::processMouseMovement(sf::Event t_event)
 	m_mouseEnd.y = static_cast<float>(t_event.mouseMove.y);
 
 	m_mouseDot.setPosition(m_mouseEnd); // tracking location of mouse to check if it intersects with a vertex
+
+
+	for (int index = 0; index < ALBUM_NUM; index++)
+	{
+		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getBounds()) && albums[index].getRevealed() == false)
+		{
+			albums[index].setMoveUp(true);
+		}
+		else if(albums[index].getRevealed() == true)
+		{
+			albums[index].setMoveUp(false);
+		}
+	}
+
+
 
 	//for (int index = 0; index < ALBUM_NUM; index++)
 	//{

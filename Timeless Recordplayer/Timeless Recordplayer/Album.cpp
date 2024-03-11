@@ -11,7 +11,7 @@ void Album::setup(float t_firstX, float t_firstY)
 {
 	int sideSize = 210; // x, size of album (x^2)
 	sf::Vector2f firstPoint = { t_firstX, t_firstY }; // coordinates of top left point
-	int angleBy = 20; // tilt in y axis
+	int angleBy = 50; // tilt in y axis
 
 	int red = (rand() % 256) + 1;
 	int green = (rand() % 256) + 1;
@@ -60,6 +60,10 @@ void Album::setup(float t_firstX, float t_firstY)
 void Album::moveUp()
 {
 	speed = { 0.0f, -0.25f };
+	for (int index = 0; index < 4; index++)
+	{
+		m_cover[index].position += speed;
+	}
 
 }
 
@@ -70,7 +74,7 @@ void Album::moveDown()
 
 }
 
-bool Album::revealed()
+bool Album::getRevealed()
 {
 	return m_revealed;
 }
@@ -78,6 +82,16 @@ bool Album::revealed()
 void Album::setRevealed(bool t_isRevealed)
 {
 	m_revealed = t_isRevealed;
+}
+
+void Album::setMoveUp(bool t_moveUp)
+{
+	m_moveUp = t_moveUp;
+}
+
+bool Album::getMoveUp()
+{
+	return m_moveUp;
 }
 
 

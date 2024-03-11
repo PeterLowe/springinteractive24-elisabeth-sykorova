@@ -12,6 +12,7 @@ private:
 	bool m_revealed = false;
 	int m_movedUpCount = 0;
 	int m_movedDownCount = 0;
+	bool m_moveUp = false;
 	sf::Vector2f speed;
 	
 
@@ -20,8 +21,10 @@ public:
 	void setup(float t_firstX, float t_firstY);
 	void moveUp();
 	void moveDown();
-	bool revealed();
+	bool getRevealed();
 	void setRevealed(bool t_isRevealed);
+	void setMoveUp(bool t_moveUp);
+	bool getMoveUp();
 	sf::VertexArray m_cover {sf::Quads, 4};
 	sf::Texture m_fleetwoodTexture;
 	sf::Texture m_albumTexture;

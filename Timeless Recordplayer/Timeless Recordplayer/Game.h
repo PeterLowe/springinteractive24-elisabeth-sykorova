@@ -36,6 +36,9 @@ private:
 	void setupSprite();
 	void processMouseMovement(sf::Event t_event);
 	//void setupAlbum(float t_firstPointX, float t_firstPointY);
+	void hovering();
+	void reveal(int t_index);
+	void hide(int t_index);
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_ArialBlackfont; // font used by message

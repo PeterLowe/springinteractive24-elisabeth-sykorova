@@ -22,6 +22,8 @@ public:
 	sf::VertexArray m_cover {sf::Quads, 4};
 	sf::Texture m_fleetwoodTexture;
 	sf::Texture m_albumTexture;
+	bool m_intersecting = false;
+	int m_moveUpBy = 0;
 
 
 };

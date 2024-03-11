@@ -125,22 +125,7 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
-	if (intersecting)
-	{
-		if (m_moveUpBy < 15)
-		{
-			albums[0].moveUp();
-			m_moveUpBy++;
-		}
-	}
-	else
-	{
-		if (m_moveUpBy > 0)
-		{
-			albums[0].moveDown();
-			m_moveUpBy--;
-		}
-	}
+	hovering();
 
 }
 
@@ -232,16 +217,73 @@ void Game::processMouseMovement(sf::Event t_event)
 
 	m_mouseDot.setPosition(m_mouseEnd); // tracking location of mouse to check if it intersects with a vertex
 
-
-	if (m_mouseDot.getGlobalBounds().intersects(albums[0].m_cover.getBounds()))
+	for (int index = 0; index < ALBUM_NUM; index++)
 	{
-		intersecting = true;
-	}
-	else
-	{
-		intersecting = false;
+		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getBounds()))
+		{
+			albums[index].m_intersecting = true;
+		}
+		else
+		{
+			albums[index].m_intersecting = false;
+		}
 	}
 
+}
+
+void Game::hovering()
+{
+	int revealedIndex = ALBUM_NUM;
+	int newIndex = ALBUM_NUM;
+	bool foundIntersect = false;
+
+	for (int index = 0; index < ALBUM_NUM; index++)
+	{
+		if (albums[index].m_intersecting)
+		{
+			if (foundIntersect == false)
+			{
+				revealedIndex = index;
+				newIndex = index;
+				reveal(index);
+				foundIntersect = true;
+			}
+			else
+			{
+				revealedIndex = newIndex;
+				newIndex = index;
+				if (newIndex <= revealedIndex)
+				{
+					reveal(index);
+					hide(revealedIndex);
+				}
+			}
+		}
+		else
+		{
+			hide(index);
+
+		}
+	}
+}
+
+void Game::reveal(int t_index)
+{
+	std::cout << "revealing index " << t_index << std::endl;
+	if (albums[t_index].m_moveUpBy < 15)
+	{
+		albums[t_index].moveUp();
+		albums[t_index].m_moveUpBy++;
+	}
+}
+
+void Game::hide(int t_index)
+{
+	if (albums[t_index].m_moveUpBy > 0)
+	{
+		albums[t_index].moveDown();
+		albums[t_index].m_moveUpBy--;
+	}
 }
 
 

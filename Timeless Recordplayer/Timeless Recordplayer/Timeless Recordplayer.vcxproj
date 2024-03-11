@@ -22,10 +22,12 @@
     <ClCompile Include="Album.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Record.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Album.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Record.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="ASSETS\IMAGES\SFML-LOGO.png">

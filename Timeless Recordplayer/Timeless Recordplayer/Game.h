@@ -10,6 +10,7 @@
 /// </summary>
 #include <SFML/Graphics.hpp>
 #include "Album.h"
+#include "Record.h"
 
 const int ALBUM_NUM = 6;
 const int REVEAL_BY = 20; // multiplied by speed in album
@@ -48,6 +49,7 @@ private:
 	bool m_exitGame; // control exiting game
 	Album albums[ALBUM_NUM];
 	int albumBeingRevealed = ALBUM_NUM + 1;
+	int albumPreviouslyRevealed = ALBUM_NUM + 1;
 
 	int albumScatterX = 15;
 	int albumScatterY = 30;
@@ -61,6 +63,11 @@ private:
 
 	sf::Texture textures[TEXTURES_NUM] = { m_purpleFoxTexture, m_fleetwoodTexture };
 
+
+	bool revealing = false;
+
+
+	Record recordOne;
 	
 
 };

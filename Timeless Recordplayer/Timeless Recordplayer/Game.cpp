@@ -25,7 +25,7 @@ Game::Game() :
 {
 	setupFontAndText(); // load font 
 	setupSprite(); // load textur
-
+	recordOne.setup();
 	//albums[0].setupQuadAlbum();
 
 	for (int index = 0; index < ALBUM_NUM; index++)
@@ -126,22 +126,24 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
-	for (int index = 0; index < ALBUM_NUM; index++) // reveal and hide alb u
+	if (revealing == true && albums[albumBeingRevealed].m_movedCount < REVEAL_BY)
 	{
-		if (albums[index].m_moveUp == true && albums[index].m_movedCount < REVEAL_BY)
-		{
-			albums[index].moveUp();
-			albums[index].m_movedCount++;
-		}
-		else if(albums[index].m_moveUp == false && albums[index].m_movedCount > 0)
+		albums[albumBeingRevealed].moveUp();
+		albums[albumBeingRevealed].m_movedCount++;
+	}
+	for (int index = 0; index < ALBUM_NUM; index++)
+	{
+		if (albums[index].m_movedCount > 0 && index != albumBeingRevealed)
 		{
 			albums[index].moveDown();
 			albums[index].m_movedCount--;
 		}
+
 	}
 
-	
 }
+
+	
 
 /// <summary>
 /// draw the frame and then switch buffers
@@ -181,6 +183,8 @@ void Game::render()
 			m_window.draw(albums[index].m_cover, &m_purpleFoxTexture);
 		}
 	}
+
+	m_window.draw(recordOne.vinyl);
 
 
 	m_window.display();
@@ -227,16 +231,24 @@ void Game::processMouseMovement(sf::Event t_event)
 
 	m_mouseDot.setPosition(m_mouseEnd); // tracking location of mouse to check if it intersects with a vertex
 
-
-	for (int index = 0; index < ALBUM_NUM; index++)
+	if (revealing != true)
 	{
-		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getBounds()))
+		for (int index = 0; index < ALBUM_NUM; index++)
 		{
-			albums[index].m_moveUp = true;
+			if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getBounds()))
+			{
+				albumBeingRevealed = index;
+				revealing = true;
+				break;
+
+			}
 		}
-		else
+	}
+	else
+	{
+		if (albums[albumBeingRevealed].m_movedCount >= REVEAL_BY)
 		{
-			albums[index].m_moveUp = false;
+			revealing = false;
 		}
 	}
 

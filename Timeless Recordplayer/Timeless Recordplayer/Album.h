@@ -28,6 +28,7 @@ public:
 
 	int m_movedCount = 0;
 	bool m_moveUp = false;
+	bool m_forceHide = false;
 
 
 };

@@ -18,13 +18,12 @@ private:
 public:
 	Album();
 	void setup(float t_firstX, float t_firstY);
-	void setupQuadAlbum(float t_firstX, float t_firstY);
 	void moveUp();
 	void moveDown();
 	bool revealed();
 	void setRevealed(bool t_isRevealed);
-	sf::ConvexShape m_angledAlbum;
-	sf::VertexArray m_quadAlbum {sf::Quads, 4};
+	sf::VertexArray m_cover {sf::Quads, 4};
+	sf::Texture m_fleetwoodTexture;
 	sf::Texture m_albumTexture;
 
 

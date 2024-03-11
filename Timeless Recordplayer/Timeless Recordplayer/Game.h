@@ -57,6 +57,9 @@ private:
 
 	int countReveal = 0;
 	int countHide = 0;
+
+	sf::Texture m_albumTexture;
+	sf::Texture m_fleetwoodTexture;
 	
 
 };

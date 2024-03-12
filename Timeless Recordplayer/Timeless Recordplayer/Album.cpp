@@ -43,4 +43,23 @@ void Album::moveDown()
 
 }
 
+void Album::reveal()
+{
+	for (int revealBy = 50; revealBy > 0; revealBy--)
+	{
+		moveUp();
+	}
+	revealed = true;
+}
+
+void Album::hide()
+{
+	for (int hideBy = 50; hideBy > 0; hideBy--)
+	{
+		moveDown();
+	}
+	revealed = false;
+
+}
+
 

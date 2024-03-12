@@ -15,6 +15,11 @@
 const int ALBUM_NUM = 6;
 const int REVEAL_BY = 30; // multiplied by speed in album
 
+const int NORTH = 1;
+const int SOUTH = 2;
+const int EAST = 3;
+const int WEST = 4;
+
 class Game
 {
 public:
@@ -61,6 +66,11 @@ private:
 
 	sf::Texture m_purpleFoxTexture;
 	sf::Texture m_fleetwoodTexture;
+
+	int albumToReveal = -1;
+	int albumRevealed = -1;
+	bool revealed = false;
+	bool getVinyl = false;
 	
 
 };

@@ -161,8 +161,10 @@ void Game::render()
 	{
 		m_window.draw(albums[index].m_cover);
 	}
-
-	m_window.draw(recordOne.vinyl);
+	if (getVinyl)
+	{
+		m_window.draw(recordOne.vinyl);
+	}
 	
 	m_window.display();
 }
@@ -213,7 +215,25 @@ void Game::hide(int t_index)
 
 void Game::processMouseWheel(sf::Event t_event)
 {
+	albumRevealed = albumToReveal;
+	albumToReveal = albumToReveal + t_event.mouseWheel.delta;
 
+	if (albumToReveal < 0)
+	{
+		albumToReveal = ALBUM_NUM - 1;
+	}
+	else if (albumToReveal >= ALBUM_NUM)
+	{
+		albumToReveal = 0;
+	}
+	albums[albumToReveal].reveal(); // replace wit
+	
+	
+
+	if (albumRevealed >= 0 && albumRevealed < ALBUM_NUM)
+	{
+		albums[albumRevealed].hide();
+	}
 
 }
 
@@ -224,7 +244,20 @@ void Game::processMousePressed(sf::Event t_event)
 	m_mouseEnd = sf::Mouse::getPosition(m_window);
 	m_mouseEndVector.x = m_mouseEnd.x;
 	m_mouseEndVector.y = m_mouseEnd.y;
-	recordOne.vinyl.setPosition(m_mouseEndVector);
+	m_mouseDot.setPosition(m_mouseEndVector);
+	
+
+	for (int index = 0; index < ALBUM_NUM; index++)
+	{
+		if (albums[index].revealed == true)
+		{
+			if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getGlobalBounds()))
+			{
+				getVinyl = true;
+				recordOne.moveRight(albums[index].m_cover.getPosition());
+			}
+		}
+	}
 
 }
 

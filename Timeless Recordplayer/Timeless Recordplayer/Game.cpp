@@ -91,14 +91,20 @@ void Game::processEvents()
 		{
 			processKeys(newEvent);
 		}
-	/*	if (sf::Event::MouseMoved == newEvent.type)
+		if (sf::Event::MouseMoved == newEvent.type)
 		{
 			processMouseMovement(newEvent);
-		}*/
+		}
 		if (sf::Event::MouseWheelMoved == newEvent.type)
 		{
 			std::cout << "wheel movement: " << newEvent.mouseWheel.delta << std::endl;
 			processMouseWheel(newEvent);
+		}
+
+		if (sf::Event::MouseButtonPressed == newEvent.type)
+		{
+			processMousePressed(newEvent);
+			std::cout << "mouse presssed" << std::endl;
 		}
 		
 	}
@@ -130,6 +136,12 @@ void Game::update(sf::Time t_deltaTime)
 
 	hovering();
 
+	if (gettingVinyl)
+	{
+		recordOne.moveRight();
+	}
+
+
 }
 
 	
@@ -157,9 +169,7 @@ void Game::render()
 		// simple error message if previous call fails
 		std::cout << "problem loading fleet" << std::endl;
 	}
-	
-	
-	
+
 
 	for (int index = ALBUM_NUM - 1; index >= 0; index--)
 	{
@@ -173,7 +183,10 @@ void Game::render()
 		}
 	}
 
-	m_window.draw(recordOne.vinyl);
+	if (gettingVinyl)
+	{
+		m_window.draw(recordOne.vinyl);
+	}
 
 
 	m_window.display();
@@ -237,6 +250,9 @@ void Game::reveal(int t_index)
 		albums[t_index].moveUp();
 		albums[t_index].m_moveUpBy++; // set revealed to true then use it to check for what needs to be hidden like in old version
 	}
+	revealed = true;
+	std::cout << "revealed true " << std::endl;
+
 }
 
 void Game::hide(int t_index)
@@ -263,10 +279,27 @@ void Game::processMouseWheel(sf::Event t_event)
 		albumToReveal = 0;
 	}
 	reveal(albumToReveal);
+
 	if (revealedAlbum >= 0 && revealedAlbum < ALBUM_NUM)
 	{
 		hide(revealedAlbum);
 	}
+}
+
+void Game::processMousePressed(sf::Event t_event)
+{
+
+	if (revealed)
+	{
+		if (m_mouseEnd.x >= 50 && m_mouseEnd.x <= 400 &&
+			m_mouseEnd.y >= 50 && m_mouseEnd.y <= 800) // later check for intersect
+		{
+			gettingVinyl = true;
+			std::cout << "getting vinl" << std::endl;
+			recordOne.vinyl.setPosition(m_mouseEnd);
+		}
+	}
+
 }
 
 

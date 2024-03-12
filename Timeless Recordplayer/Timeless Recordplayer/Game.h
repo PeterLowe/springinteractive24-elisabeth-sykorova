@@ -42,6 +42,7 @@ private:
 	void hide(int t_index);
 
 	void processMouseWheel(sf::Event t_event);
+	void processMousePressed(sf::Event t_event);
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_ArialBlackfont; // font used by message
@@ -77,6 +78,11 @@ private:
 
 	bool moveUp = false;
 	bool moveDown = false;
+	bool revealed = false;
+
+	bool gettingVinyl = false;
+
+	int slideRightCount = 0;
 	
 
 };

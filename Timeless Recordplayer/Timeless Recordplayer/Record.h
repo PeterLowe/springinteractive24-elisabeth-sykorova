@@ -9,9 +9,15 @@ class Record
 public:
 	sf::CircleShape vinyl;
 	void setup();
+	void moveRight();
+	sf::Vector2f speed;
+	sf::Vector2f currentPosition;
 
 
 
 
 };
+
+
+
 

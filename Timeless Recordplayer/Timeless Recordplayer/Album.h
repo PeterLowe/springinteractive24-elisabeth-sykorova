@@ -25,5 +25,7 @@ public:
 	int m_moveUpBy = 0;
 	bool m_revealed = false;
 
+	sf::Vector2f firstPoint;
+
 
 };

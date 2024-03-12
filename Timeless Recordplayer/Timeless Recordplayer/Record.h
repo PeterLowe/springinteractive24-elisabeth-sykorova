@@ -13,6 +13,8 @@ public:
 	sf::Vector2f speed;
 	sf::Vector2f currentPosition;
 
+	float vinylRadius = 100;
+
 
 
 

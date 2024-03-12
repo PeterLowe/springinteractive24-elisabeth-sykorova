@@ -18,7 +18,7 @@ void Album::setupCover(float t_firstX, float t_firstY)
 	sf::Vector2f coverPosition = { t_firstX, t_firstY };
 
 	m_cover.setPosition(coverPosition);
-	m_cover.setOrigin(coverSideSize / 2, coverSideSize / 2);
+	m_cover.setOrigin(coverSideSize, coverSideSize);
 	m_cover.setFillColor(sf::Color(red, green, blue, opacity));
 	m_cover.setSize(sf::Vector2f(coverSideSize, coverSideSize));
 

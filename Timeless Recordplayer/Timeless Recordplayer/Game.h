@@ -33,7 +33,6 @@ private:
 	void render();
 
 	void setupFontAndText();
-	void setupSprite();
 	void processMouseMovement(sf::Event t_event);
 	//void setupAlbum(float t_firstPointX, float t_firstPointY);
 
@@ -54,7 +53,10 @@ private:
 
 
 	Album albums[ALBUM_NUM];
-	sf::Vector2f m_mouseEnd;
+	Record recordOne;
+
+	sf::Vector2i m_mouseEnd;
+	sf::Vector2f m_mouseEndVector;
 	sf::CircleShape m_mouseDot{1.0f};
 
 	sf::Texture m_purpleFoxTexture;

@@ -3,10 +3,7 @@
 /// March 2024
 /// </summary>
 /// 
-/// NOTES: - variables declared all over the place, in need of re-ordering
-/// - BUG when hovering over first and unhovering in the direction down
-/// REPLACE FOR LOOPS WITH IF
-/// QUADS????
+/// NOTES: 
 
 #include "Game.h"
 #include <iostream>
@@ -24,7 +21,6 @@ Game::Game() :
 	m_exitGame{false} //when true game will exit
 {
 	setupFontAndText(); // load font 
-	setupSprite(); // load textur
 	
 	//albums[0].setupQuadAlbum();
 
@@ -33,7 +29,11 @@ Game::Game() :
 		// setup albums
 	}
 
-	albums[0].setupCover(200.0f, 200.0f);
+	for (int index = 0; index < ALBUM_NUM; index++)
+	{
+		albums[index].setupCover(250.0f + (index * 20.0f), 450.0f - (index * 30.0f));
+	}
+	recordOne.setup();
 
 
 
@@ -128,7 +128,6 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
-	albums[0].moveDown();
 
 }
 
@@ -158,7 +157,12 @@ void Game::render()
 		std::cout << "problem loading fleet" << std::endl;
 	}
 
-	m_window.draw(albums[0].m_cover);
+	for (int index = ALBUM_NUM - 1; index > 0; index--)
+	{
+		m_window.draw(albums[index].m_cover);
+	}
+
+	m_window.draw(recordOne.vinyl);
 	
 	m_window.display();
 }
@@ -183,26 +187,9 @@ void Game::setupFontAndText()
 
 }
 
-/// <summary>
-/// load the texture and setup the sprite for the logo
-/// </summary>
-void Game::setupSprite()
-{
-	if (!m_logoTexture.loadFromFile("ASSETS\\IMAGES\\SFML-LOGO.png"))
-	{
-		// simple error message if previous call fails
-		std::cout << "problem loading logo" << std::endl;
-	}
-	m_logoSprite.setTexture(m_logoTexture);
-	m_logoSprite.setPosition(300.0f, 180.0f);
-}
 
 void Game::processMouseMovement(sf::Event t_event)
 {
-	m_mouseEnd.x = static_cast<float>(t_event.mouseMove.x);
-	m_mouseEnd.y = static_cast<float>(t_event.mouseMove.y);
-
-	m_mouseDot.setPosition(m_mouseEnd); // tracking location of mouse to check if it intersects with a vertex
 
 
 }
@@ -233,6 +220,11 @@ void Game::processMouseWheel(sf::Event t_event)
 void Game::processMousePressed(sf::Event t_event)
 {
 	// for getting vinyl out of album
+
+	m_mouseEnd = sf::Mouse::getPosition(m_window);
+	m_mouseEndVector.x = m_mouseEnd.x;
+	m_mouseEndVector.y = m_mouseEnd.y;
+	recordOne.vinyl.setPosition(m_mouseEndVector);
 
 }
 

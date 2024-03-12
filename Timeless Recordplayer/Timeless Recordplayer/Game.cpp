@@ -91,13 +91,16 @@ void Game::processEvents()
 		{
 			processKeys(newEvent);
 		}
-		if (sf::Event::MouseMoved == newEvent.type)
+	/*	if (sf::Event::MouseMoved == newEvent.type)
 		{
 			processMouseMovement(newEvent);
-		}
-		if (sf::Event::MouseButtonPressed == newEvent.type)
+		}*/
+		if (sf::Event::MouseWheelMoved == newEvent.type)
 		{
+			std::cout << "wheel movement: " << newEvent.mouseWheel.delta << std::endl;
+			processMouseWheel(newEvent);
 		}
+		
 	}
 }
 
@@ -217,72 +220,52 @@ void Game::processMouseMovement(sf::Event t_event)
 
 	m_mouseDot.setPosition(m_mouseEnd); // tracking location of mouse to check if it intersects with a vertex
 
-	for (int index = 0; index < ALBUM_NUM; index++)
-	{
-		if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getBounds()))
-		{
-			albums[index].m_intersecting = true;
-		}
-		else
-		{
-			albums[index].m_intersecting = false;
-		}
-	}
 
 }
 
 void Game::hovering()
 {
-	int revealedIndex = ALBUM_NUM;
-	int newIndex = ALBUM_NUM;
-	bool foundIntersect = false;
 
-	for (int index = 0; index < ALBUM_NUM; index++)
-	{
-		if (albums[index].m_intersecting)
-		{
-			if (foundIntersect == false)
-			{
-				revealedIndex = index;
-				newIndex = index;
-				reveal(index);
-				foundIntersect = true;
-			}
-			else
-			{
-				revealedIndex = newIndex;
-				newIndex = index;
-				if (newIndex <= revealedIndex)
-				{
-					reveal(index);
-					hide(revealedIndex);
-				}
-			}
-		}
-		else
-		{
-			hide(index);
-
-		}
-	}
 }
+
 
 void Game::reveal(int t_index)
 {
 	std::cout << "revealing index " << t_index << std::endl;
-	if (albums[t_index].m_moveUpBy < 15)
+	while (albums[t_index].m_moveUpBy < 50)
 	{
 		albums[t_index].moveUp();
-		albums[t_index].m_moveUpBy++;
+		albums[t_index].m_moveUpBy++; // set revealed to true then use it to check for what needs to be hidden like in old version
 	}
 }
 
 void Game::hide(int t_index)
 {
-	if (albums[t_index].m_moveUpBy > 0)
+	while (albums[t_index].m_moveUpBy > 0)
 	{
 		albums[t_index].moveDown();
 		albums[t_index].m_moveUpBy--;
+	}
+}
+
+void Game::processMouseWheel(sf::Event t_event)
+{
+	revealedAlbum = albumToReveal;
+	albumToReveal = albumToReveal + t_event.mouseWheel.delta;
+	std::cout << "album to reveal " << albumToReveal;
+
+	if (albumToReveal < 0)
+	{
+		albumToReveal = ALBUM_NUM - 1;
+	}
+	else if (albumToReveal >= ALBUM_NUM)
+	{
+		albumToReveal = 0;
+	}
+	reveal(albumToReveal);
+	if (revealedAlbum >= 0 && revealedAlbum < ALBUM_NUM)
+	{
+		hide(revealedAlbum);
 	}
 }
 

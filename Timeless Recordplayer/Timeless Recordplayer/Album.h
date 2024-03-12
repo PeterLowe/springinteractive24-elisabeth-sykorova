@@ -9,7 +9,6 @@ class Album
 {
 private:
 	int m_pointCount{ 4 };
-	bool m_revealed = false;
 	sf::Vector2f speed;
 	
 
@@ -24,6 +23,7 @@ public:
 	sf::Texture m_albumTexture;
 	bool m_intersecting = false;
 	int m_moveUpBy = 0;
+	bool m_revealed = false;
 
 
 };

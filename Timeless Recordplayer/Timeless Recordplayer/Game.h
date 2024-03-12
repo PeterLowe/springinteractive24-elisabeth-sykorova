@@ -9,6 +9,7 @@
 /// Don't forget the endif at the bottom
 /// </summary>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Album.h"
 #include "Record.h"
 
@@ -40,6 +41,9 @@ private:
 	void setupFontAndText();
 	void processMouseMovement(sf::Event t_event);
 	//void setupAlbum(float t_firstPointX, float t_firstPointY);
+	void setupRecordPlayer();
+
+
 
 	void hovering();
 	void reveal(int t_index);
@@ -47,6 +51,10 @@ private:
 
 	void processMouseWheel(sf::Event t_event);
 	void processMousePressed(sf::Event t_event);
+
+	void checkVinylPlayerCollision();
+
+	void setupMusic();
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_ArialBlackfont; // font used by message
@@ -67,10 +75,24 @@ private:
 	sf::Texture m_purpleFoxTexture;
 	sf::Texture m_fleetwoodTexture;
 
-	int albumToReveal = -1;
-	int albumRevealed = -1;
-	bool revealed = false;
-	bool getVinyl = false;
+	
+
+	int m_albumToReveal = -1;
+	int m_albumRevealed = -1;
+	bool m_revealed = false;
+	bool m_getVinyl = false;
+	bool m_holdingVinyl = false;
+
+	bool m_mouseReleased = true;
+	bool m_mouseOnVinyl = false;
+
+
+	sf::RectangleShape m_recordPlayer;
+
+	sf::SoundBuffer m_songBuffer;
+	sf::Sound m_song;
+
+	bool m_songPlaying = false;
 	
 
 };

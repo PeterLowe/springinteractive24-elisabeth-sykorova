@@ -34,6 +34,8 @@ Game::Game() :
 		albums[index].setupCover(250.0f + (index * 20.0f), 450.0f - (index * 30.0f));
 	}
 	recordOne.setup();
+	setupRecordPlayer();
+	setupMusic();
 
 
 
@@ -99,6 +101,7 @@ void Game::processEvents()
 		if (sf::Event::MouseButtonPressed == newEvent.type)
 		{
 			processMousePressed(newEvent);
+			m_mouseReleased = false;
 		}
 
 		if (sf::Event::MouseMoved == newEvent.type)
@@ -107,7 +110,7 @@ void Game::processEvents()
 		}
 		if (sf::Event::MouseButtonReleased == newEvent.type)
 		{
-
+			m_mouseReleased = true;
 		}
 		
 	}
@@ -137,7 +140,7 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
-
+	checkVinylPlayerCollision();
 }
 
 	
@@ -170,10 +173,12 @@ void Game::render()
 	{
 		m_window.draw(albums[index].m_cover);
 	}
-	if (getVinyl)
+	if (m_getVinyl)
 	{
 		m_window.draw(recordOne.vinyl);
 	}
+
+	m_window.draw(m_recordPlayer);
 	
 	m_window.display();
 }
@@ -201,14 +206,23 @@ void Game::setupFontAndText()
 
 void Game::processMouseMovement(sf::Event t_event)
 {
-	if (getVinyl)
+	if (m_getVinyl && recordOne.revealed == true && m_mouseReleased != true && m_mouseOnVinyl)
 	{
 		m_mouseEnd = sf::Mouse::getPosition(m_window);
 		m_mouseEndVector.x = m_mouseEnd.x;
 		m_mouseEndVector.y = m_mouseEnd.y;
 		recordOne.followMouse(m_mouseEndVector);
+		m_holdingVinyl = true;
 	}
 
+}
+
+void Game::setupRecordPlayer()
+{
+	const sf::Vector2f size {200.0f, 40.0f};
+	m_recordPlayer.setFillColor(sf::Color::Green);
+	m_recordPlayer.setSize(size);
+	m_recordPlayer.setPosition(500.0f, 400.0f);
 }
 
 void Game::hovering()
@@ -230,27 +244,27 @@ void Game::hide(int t_index)
 
 void Game::processMouseWheel(sf::Event t_event)
 {
-	albumRevealed = albumToReveal;
-	albumToReveal = albumToReveal + t_event.mouseWheel.delta;
+	m_albumRevealed = m_albumToReveal;
+	m_albumToReveal = m_albumToReveal + t_event.mouseWheel.delta;
 
 
-	if (albumToReveal < 0)
+	if (m_albumToReveal < 0)
 	{
-		albumToReveal = ALBUM_NUM - 1;
+		m_albumToReveal = ALBUM_NUM - 1;
 	}
-	else if (albumToReveal >= ALBUM_NUM)
+	else if (m_albumToReveal >= ALBUM_NUM)
 	{
-		albumToReveal = 0;
+		m_albumToReveal = 0;
 	}
-	albums[albumToReveal].reveal(); 
+	albums[m_albumToReveal].reveal(); 
 	
 	// optionally add option when all albums hide
 	
 	
 
-	if (albumRevealed >= 0 && albumRevealed < ALBUM_NUM)
+	if (m_albumRevealed >= 0 && m_albumRevealed < ALBUM_NUM)
 	{
-		albums[albumRevealed].hide();
+		albums[m_albumRevealed].hide();
 	}
 
 }
@@ -267,24 +281,51 @@ void Game::processMousePressed(sf::Event t_event)
 
 	for (int index = 0; index < ALBUM_NUM; index++)
 	{
-		if (albums[index].revealed == true)
+		if (albums[index].revealed)
 		{
 			if (m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getGlobalBounds()))
 			{
-				getVinyl = true;
+				m_getVinyl = true;
 				recordOne.moveRight(albums[index].m_cover.getPosition());
 				std::cout << "revealing vinyl for " << index << std::endl;
 			}
 		}
 	}
 
-	if (getVinyl)
+	if (m_getVinyl)
 	{
 		if (m_mouseDot.getGlobalBounds().intersects(recordOne.vinyl.getGlobalBounds()))
 		{
+			m_mouseOnVinyl = true;
+		}
+		else
+		{
+			m_mouseOnVinyl = false;
 		}
 	}
 
+}
+
+void Game::checkVinylPlayerCollision()
+{
+
+
+	if (m_recordPlayer.getGlobalBounds().intersects(recordOne.vinyl.getGlobalBounds()) && m_mouseReleased && m_songPlaying != true)
+	{
+		m_song.play();
+		std::cout << "music playing" << std::endl;
+		m_songPlaying = true;
+	}
+}
+
+void Game::setupMusic()
+{
+	if (!m_songBuffer.loadFromFile("ASSETS\\SOUNDS\\EverblueForest.wav"))
+	{
+		std::cout << "problem loading background audio" << std::endl;
+	}
+
+	m_song.setBuffer(m_songBuffer);
 }
 
 

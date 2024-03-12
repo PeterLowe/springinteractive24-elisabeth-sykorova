@@ -16,5 +16,11 @@ void Record::moveRight(sf::Vector2f t_startingPosition)
 	speed = { 100.0f,0.0f };
 	vinylPosition += speed;
 	vinyl.setPosition(vinylPosition);
+}
+
+void Record::followMouse(sf::Vector2f t_mousePosition)
+{
+	vinyl.setPosition(t_mousePosition);
 
 }
+

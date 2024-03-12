@@ -10,6 +10,8 @@ public:
 	sf::CircleShape vinyl;
 	void setup();
 	void moveRight(sf::Vector2f t_startingPosition);
+	void followMouse(sf::Vector2f t_mousePosition);
+
 	sf::Vector2f speed;
 	sf::Vector2f currentPosition;
 

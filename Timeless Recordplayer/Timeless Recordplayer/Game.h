@@ -44,17 +44,14 @@ private:
 	void setupRecordPlayer();
 
 
-
-	void hovering();
-	void reveal(int t_index);
-	void hide(int t_index);
-
 	void processMouseWheel(sf::Event t_event);
 	void processMousePressed(sf::Event t_event);
 
 	void checkVinylPlayerCollision();
 
 	void setupMusic();
+
+	sf::RectangleShape square;
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_ArialBlackfont; // font used by message
@@ -79,7 +76,6 @@ private:
 
 	int m_albumToReveal = -1;
 	int m_albumRevealed = -1;
-	bool m_revealed = false;
 	bool m_getVinyl = false;
 	bool m_holdingVinyl = false;
 
@@ -100,6 +96,11 @@ private:
 	sf::Sound m_rammstein;
 
 	bool m_songPlaying = false;
+
+	bool reveal = false;
+	bool hide = false;
+	int revealBy;
+	int hideBy;
 	
 
 };

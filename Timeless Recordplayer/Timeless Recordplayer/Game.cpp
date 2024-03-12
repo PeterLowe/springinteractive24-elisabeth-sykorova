@@ -40,6 +40,7 @@ Game::Game() :
 
 
 
+
 }
 
 /// <summary>
@@ -164,6 +165,8 @@ void Game::render()
 	//	std::cout << "problem loading fleet" << std::endl;
 	//}
 
+	m_window.draw(m_recordPlayer); // recordplayer
+
 	for (int index = ALBUM_NUM - 1; index >= 0; index--)
 	{
 		m_window.draw(albums[index].m_cover); // covers
@@ -173,8 +176,6 @@ void Game::render()
 		m_window.draw(recordOne.vinyl); // draws vinyl if it's activated
 	}
 
-	m_window.draw(m_recordPlayer); // recordplayer
-	
 	m_window.display();
 }
 
@@ -223,6 +224,8 @@ void Game::setupRecordPlayer()
 }
 
 
+
+
 void Game::processMouseWheel(sf::Event t_event)
 {
 	if (!m_getVinyl) // no more revealing once a vinyl is out
@@ -238,7 +241,11 @@ void Game::processMouseWheel(sf::Event t_event)
 		{
 			m_albumToReveal = 0;
 		}
+
+
 		albums[m_albumToReveal].reveal(); // reveals the album that was revealed by mouse wheel
+
+
 
 		// optionally add option when all albums hide
 

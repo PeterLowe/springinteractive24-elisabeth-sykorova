@@ -25,14 +25,15 @@ Game::Game() :
 {
 	setupFontAndText(); // load font 
 	setupSprite(); // load textur
-	recordOne.setup();
+	
 	//albums[0].setupQuadAlbum();
 
 	for (int index = 0; index < ALBUM_NUM; index++)
 	{
-		albums[index].setup(50.0f + (index * albumScatterX), 250.0f - (index * albumScatterY));
-		std::cout << "setup " << index << std::endl;
+		// setup albums
 	}
+
+	albums[0].setupCover(200.0f, 200.0f);
 
 
 
@@ -91,20 +92,13 @@ void Game::processEvents()
 		{
 			processKeys(newEvent);
 		}
-		if (sf::Event::MouseMoved == newEvent.type)
-		{
-			processMouseMovement(newEvent);
-		}
 		if (sf::Event::MouseWheelMoved == newEvent.type)
 		{
-			std::cout << "wheel movement: " << newEvent.mouseWheel.delta << std::endl;
 			processMouseWheel(newEvent);
 		}
-
 		if (sf::Event::MouseButtonPressed == newEvent.type)
 		{
 			processMousePressed(newEvent);
-			std::cout << "mouse presssed" << std::endl;
 		}
 		
 	}
@@ -134,13 +128,7 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
-	hovering();
-
-	if (gettingVinyl)
-	{
-		recordOne.moveRight();
-	}
-
+	albums[0].moveDown();
 
 }
 
@@ -170,25 +158,8 @@ void Game::render()
 		std::cout << "problem loading fleet" << std::endl;
 	}
 
-
-	for (int index = ALBUM_NUM - 1; index >= 0; index--)
-	{
-		if (index % 2 == 0)
-		{
-			m_window.draw(albums[index].m_cover, &m_fleetwoodTexture);
-		}
-		else
-		{
-			m_window.draw(albums[index].m_cover, &m_purpleFoxTexture);
-		}
-	}
-
-	if (gettingVinyl)
-	{
-		m_window.draw(recordOne.vinyl);
-	}
-
-
+	m_window.draw(albums[0].m_cover);
+	
 	m_window.display();
 }
 
@@ -244,61 +215,24 @@ void Game::hovering()
 
 void Game::reveal(int t_index)
 {
-	std::cout << "revealing index " << t_index << std::endl;
-	while (albums[t_index].m_moveUpBy < 50)
-	{
-		albums[t_index].moveUp();
-		albums[t_index].m_moveUpBy++; // set revealed to true then use it to check for what needs to be hidden like in old version
-	}
-	revealed = true;
-	std::cout << "revealed true " << std::endl;
+	// reveal album
 
 }
 
 void Game::hide(int t_index)
 {
-	while (albums[t_index].m_moveUpBy > 0)
-	{
-		albums[t_index].moveDown();
-		albums[t_index].m_moveUpBy--;
-	}
+	// hide album
 }
 
 void Game::processMouseWheel(sf::Event t_event)
 {
-	revealedAlbum = albumToReveal;
-	albumToReveal = albumToReveal + t_event.mouseWheel.delta;
-	std::cout << "album to reveal " << albumToReveal;
 
-	if (albumToReveal < 0)
-	{
-		albumToReveal = ALBUM_NUM - 1;
-	}
-	else if (albumToReveal >= ALBUM_NUM)
-	{
-		albumToReveal = 0;
-	}
-	reveal(albumToReveal);
 
-	if (revealedAlbum >= 0 && revealedAlbum < ALBUM_NUM)
-	{
-		hide(revealedAlbum);
-	}
 }
 
 void Game::processMousePressed(sf::Event t_event)
 {
-
-	if (revealed)
-	{
-		if (m_mouseEnd.x >= 50 && m_mouseEnd.x <= 400 &&
-			m_mouseEnd.y >= 50 && m_mouseEnd.y <= 800) // later check for intersect
-		{
-			gettingVinyl = true;
-			std::cout << "getting vinl" << std::endl;
-			recordOne.vinyl.setPosition(m_mouseEnd);
-		}
-	}
+	// for getting vinyl out of album
 
 }
 

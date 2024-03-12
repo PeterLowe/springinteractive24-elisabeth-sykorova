@@ -50,39 +50,15 @@ private:
 	sf::Texture m_logoTexture; // texture used for sfml logo
 	sf::Sprite m_logoSprite; // sprite used for sfml logo
 	bool m_exitGame; // control exiting game
+
+
+
 	Album albums[ALBUM_NUM];
-	int albumBeingRevealed = ALBUM_NUM + 1;
-	int albumPreviouslyRevealed = ALBUM_NUM + 1;
-
-	int albumScatterX = 15;
-	int albumScatterY = 30;
-
 	sf::Vector2f m_mouseEnd;
 	sf::CircleShape m_mouseDot{1.0f};
 
-	const static int TEXTURES_NUM = 2;
 	sf::Texture m_purpleFoxTexture;
 	sf::Texture m_fleetwoodTexture;
-
-	sf::Texture textures[TEXTURES_NUM] = { m_purpleFoxTexture, m_fleetwoodTexture };
-
-	bool intersecting = false;
-
-
-	Record recordOne;
-
-	int m_moveUpBy = 0;
-
-	int albumToReveal = -1;
-	int revealedAlbum;
-
-	bool moveUp = false;
-	bool moveDown = false;
-	bool revealed = false;
-
-	bool gettingVinyl = false;
-
-	int slideRightCount = 0;
 	
 
 };

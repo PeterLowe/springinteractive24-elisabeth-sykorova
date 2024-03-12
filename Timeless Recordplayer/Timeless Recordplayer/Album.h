@@ -8,24 +8,22 @@
 class Album
 {
 private:
-	int m_pointCount{ 4 };
+
 	sf::Vector2f speed;
 	
 
 public:
 	Album();
-	void setup(float t_firstX, float t_firstY);
+	void setupCover(float t_firstX, float t_firstY);
 	void moveUp();
 	void moveDown();
 
-	sf::VertexArray m_cover {sf::Quads, 4};
-	sf::Texture m_fleetwoodTexture;
-	sf::Texture m_albumTexture;
-	bool m_intersecting = false;
-	int m_moveUpBy = 0;
-	bool m_revealed = false;
+	sf::Vector2f m_firstPoint;
 
-	sf::Vector2f firstPoint;
+	sf::RectangleShape m_cover;
+
+	float coverSideSize = 200.0f; // size of the album's size
+	sf::Vector2f coverPosition;
 
 
 };

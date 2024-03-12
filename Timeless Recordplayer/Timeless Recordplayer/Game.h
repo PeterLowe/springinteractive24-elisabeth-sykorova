@@ -89,8 +89,15 @@ private:
 
 	sf::RectangleShape m_recordPlayer;
 
-	sf::SoundBuffer m_songBuffer;
-	sf::Sound m_song;
+
+	//songs
+	// Everblue Forest - Purple Fox Town
+	sf::SoundBuffer m_purpleFoxTownBuffer;
+	sf::Sound m_purpleFoxTown;
+
+	// Mutter - Rammstein
+	sf::SoundBuffer m_rammsteinBuffer;
+	sf::Sound m_rammstein;
 
 	bool m_songPlaying = false;
 	

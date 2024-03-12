@@ -151,23 +151,18 @@ void Game::update(sf::Time t_deltaTime)
 void Game::render()
 {
 	m_window.clear(sf::Color::White);
-	//m_window.draw(m_welcomeMessage);
-	//m_window.draw(m_logoSprite);
-	/*m_window.draw(m_angledAlbum);*/
 
-	//m_window.draw(albums[9].m_angledAlbum); // for debug 
+	//if (!m_purpleFoxTexture.loadFromFile("ASSETS\\IMAGES\\purpleFoxTown.jpg"))
+	//{
+	//	// simple error message if previous call fails
+	//	std::cout << "problem loading cover" << std::endl;
+	//}
 
-	if (!m_purpleFoxTexture.loadFromFile("ASSETS\\IMAGES\\purpleFoxTown.jpg"))
-	{
-		// simple error message if previous call fails
-		std::cout << "problem loading cover" << std::endl;
-	}
-
-	if (!m_fleetwoodTexture.loadFromFile("ASSETS\\IMAGES\\fleetwoodMac.jpg"))
-	{
-		// simple error message if previous call fails
-		std::cout << "problem loading fleet" << std::endl;
-	}
+	//if (!m_fleetwoodTexture.loadFromFile("ASSETS\\IMAGES\\fleetwoodMac.jpg"))
+	//{
+	//	// simple error message if previous call fails
+	//	std::cout << "problem loading fleet" << std::endl;
+	//}
 
 	for (int index = ALBUM_NUM - 1; index >= 0; index--)
 	{
@@ -230,27 +225,29 @@ void Game::setupRecordPlayer()
 
 void Game::processMouseWheel(sf::Event t_event)
 {
-	m_albumRevealed = m_albumToReveal;
-	m_albumToReveal = m_albumToReveal + t_event.mouseWheel.delta; // mouse -1 or +1 based on direction of wheel movement
+	if (!m_getVinyl) // no more revealing once a vinyl is out
+	{
+		m_albumRevealed = m_albumToReveal;
+		m_albumToReveal = m_albumToReveal + t_event.mouseWheel.delta; // mouse -1 or +1 based on direction of wheel movement
+
+		if (m_albumToReveal < 0) // checks for array boundaries
+		{
+			m_albumToReveal = ALBUM_NUM - 1;
+		}
+		else if (m_albumToReveal >= ALBUM_NUM) // checks for array boundaries
+		{
+			m_albumToReveal = 0;
+		}
+		albums[m_albumToReveal].reveal(); // reveals the album that was revealed by mouse wheel
+
+		// optionally add option when all albums hide
 
 
-	if (m_albumToReveal < 0) // checks for array boundaries
-	{
-		m_albumToReveal = ALBUM_NUM - 1;
-	}
-	else if (m_albumToReveal >= ALBUM_NUM) // checks for array boundaries
-	{
-		m_albumToReveal = 0;
-	}
-	albums[m_albumToReveal].reveal(); // reveals the album that was revealed by mouse wheel
-	
-	// optionally add option when all albums hide
-	
-	
 
-	if (m_albumRevealed >= 0 && m_albumRevealed < ALBUM_NUM) // checks for boundaries
-	{
-		albums[m_albumRevealed].hide(); // hides the previously revealed album
+		if (m_albumRevealed >= 0 && m_albumRevealed < ALBUM_NUM) // checks for boundaries
+		{
+			albums[m_albumRevealed].hide(); // hides the previously revealed album
+		}
 	}
 
 }
@@ -269,14 +266,28 @@ void Game::processMousePressed(sf::Event t_event)
 	{
 		// if the mouse clicks on revealed album, it will move vinyl 
 		if (albums[index].revealed &&
-			m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getGlobalBounds())) 
+			m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getGlobalBounds()) &&
+			m_getVinyl != true) 
 		{
 			m_getVinyl = true;
 			recordOne.moveRight(albums[index].m_cover.getPosition());
 			std::cout << "revealing vinyl for " << index << std::endl;
+			break;
 
 		}
+		// when clicked again, vinyl hides and user can scroll again
+		else if(albums[index].revealed &&
+			m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getGlobalBounds()) &&
+			m_getVinyl == true) 
+		{
+			m_getVinyl = false;
+			recordOne.moveRight(sf::Vector2f(0.0f,0.0f));
+			std::cout << "hiding back" << std::endl;
+			
+		}
 	}
+	
+
 
 	if (m_getVinyl) // checks when getting vinyl (it has been revealed), if mouse is on it (later used for mouse following)
 	{
@@ -297,20 +308,48 @@ void Game::checkVinylPlayerCollision()
 	// if vinyl is released on recordplayer, music plays
 	if (m_recordPlayer.getGlobalBounds().intersects(recordOne.vinyl.getGlobalBounds()) && m_mouseReleased && m_songPlaying != true)
 	{
-		m_song.play();
-		std::cout << "music playing" << std::endl;
-		m_songPlaying = true;
+		switch(m_albumToReveal)
+		{
+			case 0:
+				m_purpleFoxTown.play();
+				std::cout << "music playing" << std::endl;
+				m_songPlaying = true;
+				break;
+
+			case 1:
+				m_rammstein.play();
+				std::cout << "ram playing" << std::endl;
+				m_songPlaying = true;
+				break;
+		}
+
+	}
+	if (m_songPlaying == true && !(m_recordPlayer.getGlobalBounds().intersects(recordOne.vinyl.getGlobalBounds())))
+	{
+		m_purpleFoxTown.stop();
+		m_rammstein.stop();
+		m_songPlaying = false;
 	}
 }
 
 void Game::setupMusic() // loads song
 {
-	if (!m_songBuffer.loadFromFile("ASSETS\\SOUNDS\\EverblueForest.wav"))
+	if (!m_purpleFoxTownBuffer.loadFromFile("ASSETS\\SOUNDS\\EverblueForest.wav"))
 	{
-		std::cout << "problem loading background audio" << std::endl;
+		std::cout << "problem loading fox audio" << std::endl;
 	}
 
-	m_song.setBuffer(m_songBuffer);
+	m_purpleFoxTown.setBuffer(m_purpleFoxTownBuffer);
+	m_purpleFoxTown.setVolume(20.0f);
+
+	if (!m_rammsteinBuffer.loadFromFile("ASSETS\\SOUNDS\\Mutter.wav"))
+	{
+		std::cout << "problem loading mutter audio" << std::endl;
+	}
+
+	m_rammstein.setBuffer(m_rammsteinBuffer);
+	m_rammstein.setVolume(20.0f);
+
 }
 
 

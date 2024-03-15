@@ -206,8 +206,8 @@ void Game::processMouseMovement(sf::Event t_event) // if mouse is moving
 	if (m_getVinyl && recordOne.revealed && !m_mouseReleased && m_mouseOnVinyl)
 	{
 		m_mouseEnd = sf::Mouse::getPosition(m_window);
-		m_mouseEndVector.x = m_mouseEnd.x;
-		m_mouseEndVector.y = m_mouseEnd.y;
+		m_mouseEndVector.x = static_cast<float>(m_mouseEnd.x);
+		m_mouseEndVector.y = static_cast<float>(m_mouseEnd.y);
 		recordOne.followMouse(m_mouseEndVector);
 		m_holdingVinyl = true;
 	}
@@ -264,8 +264,8 @@ void Game::processMousePressed(sf::Event t_event)
 	// for getting vinyl out of album
 
 	m_mouseEnd = sf::Mouse::getPosition(m_window); // relative to window
-	m_mouseEndVector.x = m_mouseEnd.x;
-	m_mouseEndVector.y = m_mouseEnd.y;
+	m_mouseEndVector.x = static_cast<float>(m_mouseEnd.x);
+	m_mouseEndVector.y = static_cast<float>(m_mouseEnd.y);
 	m_mouseDot.setPosition(m_mouseEndVector);
 	
 
@@ -279,6 +279,7 @@ void Game::processMousePressed(sf::Event t_event)
 			m_getVinyl = true;
 			recordOne.moveRight(albums[index].m_cover.getPosition());
 			std::cout << "revealing vinyl for " << index << std::endl;
+			recordOne.revealed = true;
 			break;
 
 		}
@@ -290,6 +291,7 @@ void Game::processMousePressed(sf::Event t_event)
 			m_getVinyl = false;
 			recordOne.moveRight(sf::Vector2f(0.0f,0.0f));
 			std::cout << "hiding back" << std::endl;
+			recordOne.revealed = false;
 			
 		}
 	}

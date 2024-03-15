@@ -50,6 +50,9 @@ private:
 	void checkVinylPlayerCollision();
 
 	void setupMusic();
+	sf::Sound songs[ALBUM_NUM];
+
+	void loadTextures();
 
 	sf::RectangleShape square;
 
@@ -75,7 +78,7 @@ private:
 	
 
 	int m_albumToReveal = -1;
-	int m_albumRevealed = -1;
+	//int m_albumRevealed = -1;
 	bool m_getVinyl = false;
 	bool m_holdingVinyl = false;
 
@@ -97,10 +100,9 @@ private:
 
 	bool m_songPlaying = false;
 
-	bool reveal = false;
-	bool hide = false;
-	int revealBy;
-	int hideBy;
+	bool hidingSet = true;
+
+
 	
 
 };

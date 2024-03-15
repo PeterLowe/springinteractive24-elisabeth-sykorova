@@ -29,5 +29,8 @@ public:
 	sf::Vector2f coverPosition;
 	bool revealed = false;
 
+	bool revealAlbum = false;
+	int revealedBy = 0;
+
 
 };

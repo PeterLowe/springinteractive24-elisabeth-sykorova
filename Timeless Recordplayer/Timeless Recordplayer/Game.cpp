@@ -3,7 +3,7 @@
 /// March 2024
 /// </summary>
 /// 
-/// NOTES: 
+/// NOTES: GET RID OF ACCESSIVE BOOLS
 
 #include "Game.h"
 #include <iostream>
@@ -21,13 +21,6 @@ Game::Game() :
 	m_exitGame{false} //when true game will exit
 {
 	setupFontAndText(); // load font 
-	
-	//albums[0].setupQuadAlbum();
-
-	for (int index = 0; index < ALBUM_NUM; index++)
-	{
-		// setup albums
-	}
 
 	for (int index = 0; index < ALBUM_NUM; index++) // setups all the covers based on the amount of albums declared
 	{
@@ -142,6 +135,36 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 	checkVinylPlayerCollision(); // checks if vinyl is on record player - plays music if true
+
+	if (albums[m_albumToReveal].revealAlbum && albums[m_albumToReveal].revealedBy < 50)
+	{
+		albums[m_albumToReveal].moveUp();
+		albums[m_albumToReveal].revealedBy++;
+		std::cout << m_albumToReveal << "revealed by " << albums[m_albumToReveal].revealedBy << std::endl;
+	}
+	else if (albums[m_albumToReveal].revealedBy >= 50)
+	{
+		albums[m_albumToReveal].revealed = true;
+	}
+
+	for (int index = 0; index < ALBUM_NUM; index++)
+	{
+		if (albums[index].revealedBy > 0 && index != m_albumToReveal)
+		{
+			if (!hidingSet)
+			{
+				albums[m_albumToReveal].revealed = false;
+				hidingSet = true;
+			}
+			albums[index].moveDown();
+			albums[index].revealedBy--;
+			std::cout << index << "revealed by " << albums[index].revealedBy << std::endl;
+		}
+		else if (albums[index].revealedBy > 0 && index != m_albumToReveal)
+		{
+			albums[m_albumToReveal].revealed = false;
+		}
+	}
 }
 
 	
@@ -152,18 +175,6 @@ void Game::update(sf::Time t_deltaTime)
 void Game::render()
 {
 	m_window.clear(sf::Color::White);
-
-	//if (!m_purpleFoxTexture.loadFromFile("ASSETS\\IMAGES\\purpleFoxTown.jpg"))
-	//{
-	//	// simple error message if previous call fails
-	//	std::cout << "problem loading cover" << std::endl;
-	//}
-
-	//if (!m_fleetwoodTexture.loadFromFile("ASSETS\\IMAGES\\fleetwoodMac.jpg"))
-	//{
-	//	// simple error message if previous call fails
-	//	std::cout << "problem loading fleet" << std::endl;
-	//}
 
 	m_window.draw(m_recordPlayer); // recordplayer
 
@@ -212,7 +223,6 @@ void Game::processMouseMovement(sf::Event t_event) // if mouse is moving
 		m_holdingVinyl = true;
 	}
 	// if true, calls function for vinyl that follows the mouse
-
 }
 
 void Game::setupRecordPlayer()
@@ -223,14 +233,10 @@ void Game::setupRecordPlayer()
 	m_recordPlayer.setPosition(500.0f, 400.0f);
 }
 
-
-
-
 void Game::processMouseWheel(sf::Event t_event)
 {
 	if (!m_getVinyl) // no more revealing once a vinyl is out
 	{
-		m_albumRevealed = m_albumToReveal;
 		m_albumToReveal = m_albumToReveal + t_event.mouseWheel.delta; // mouse -1 or +1 based on direction of wheel movement
 
 		if (m_albumToReveal < 0) // checks for array boundaries
@@ -242,19 +248,8 @@ void Game::processMouseWheel(sf::Event t_event)
 			m_albumToReveal = 0;
 		}
 
+		albums[m_albumToReveal].revealAlbum = true; // reveals the album that was revealed by mouse wheel
 
-		albums[m_albumToReveal].reveal(); // reveals the album that was revealed by mouse wheel
-
-
-
-		// optionally add option when all albums hide
-
-
-
-		if (m_albumRevealed >= 0 && m_albumRevealed < ALBUM_NUM) // checks for boundaries
-		{
-			albums[m_albumRevealed].hide(); // hides the previously revealed album
-		}
 	}
 
 }
@@ -269,34 +264,29 @@ void Game::processMousePressed(sf::Event t_event)
 	m_mouseDot.setPosition(m_mouseEndVector);
 	
 
-	for (int index = 0; index < ALBUM_NUM; index++) // checks for all objects
-	{
 		// if the mouse clicks on revealed album, it will move vinyl 
-		if (albums[index].revealed &&
-			m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getGlobalBounds()) &&
-			m_getVinyl != true) 
-		{
-			m_getVinyl = true;
-			recordOne.moveRight(albums[index].m_cover.getPosition());
-			std::cout << "revealing vinyl for " << index << std::endl;
-			recordOne.revealed = true;
-			break;
+	if (albums[m_albumToReveal].revealedBy == 50 && //only if fully revealed
+		m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds()) &&
+		m_getVinyl != true &&
+		recordOne.revealed != true) 
+	{
+		m_getVinyl = true;
+		recordOne.moveRight(albums[m_albumToReveal].m_cover.getPosition());
+		std::cout << "revealing vinyl for " << m_albumToReveal << std::endl;
+		recordOne.revealed = true;
 
-		}
-		// when clicked again, vinyl hides and user can scroll again
-		else if(albums[index].revealed &&
-			m_mouseDot.getGlobalBounds().intersects(albums[index].m_cover.getGlobalBounds()) &&
-			m_getVinyl == true) 
-		{
-			m_getVinyl = false;
-			recordOne.moveRight(sf::Vector2f(0.0f,0.0f));
-			std::cout << "hiding back" << std::endl;
-			recordOne.revealed = false;
-			
-		}
 	}
-	
-
+		// when clicked again, vinyl hides and user can scroll again
+	else if(m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds()) &&
+			m_getVinyl == true &&
+			recordOne.revealed == true) 
+	{
+		m_getVinyl = false;
+		recordOne.moveRight(sf::Vector2f(0.0f,0.0f));
+		std::cout << "hiding back" << std::endl;
+		recordOne.revealed = false; 
+			
+	}		
 
 	if (m_getVinyl) // checks when getting vinyl (it has been revealed), if mouse is on it (later used for mouse following)
 	{
@@ -320,7 +310,7 @@ void Game::checkVinylPlayerCollision()
 		switch(m_albumToReveal)
 		{
 			case 0:
-				m_purpleFoxTown.play();
+				m_purpleFoxTown.play(); // REPLACE with an array 
 				std::cout << "music playing" << std::endl;
 				m_songPlaying = true;
 				break;
@@ -358,6 +348,26 @@ void Game::setupMusic() // loads song
 
 	m_rammstein.setBuffer(m_rammsteinBuffer);
 	m_rammstein.setVolume(20.0f);
+
+}
+
+void Game::loadTextures()
+{
+	if (!m_purpleFoxTexture.loadFromFile("ASSETS\\IMAGES\\purpleFoxTown.jpg"))
+	{
+		// simple error message if previous call fails
+		std::cout << "problem loading fox" << std::endl;
+	}
+
+
+	if (!m_fleetwoodTexture.loadFromFile("ASSETS\\IMAGES\\fleetwoodMac.jpg"))
+	{
+		// simple error message if previous call fails
+		std::cout << "problem loading fleet" << std::endl;
+	}
+
+
+
 
 }
 

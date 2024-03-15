@@ -3,7 +3,7 @@
 /// March 2024
 /// </summary>
 /// 
-/// NOTES: GET RID OF ACCESSIVE BOOLS
+/// NOTES: GET RID OF ACCESSIVE BOOLS, REPLACE MOVE RIGHT OF VINYL TO UPDATE 
 
 #include "Game.h"
 #include <iostream>
@@ -30,10 +30,6 @@ Game::Game() :
 	recordOne.setup();
 	setupRecordPlayer();
 	setupMusic();
-
-
-
-
 }
 
 /// <summary>
@@ -136,26 +132,21 @@ void Game::update(sf::Time t_deltaTime)
 	}
 	checkVinylPlayerCollision(); // checks if vinyl is on record player - plays music if true
 
-	if (albums[m_albumToReveal].revealAlbum && albums[m_albumToReveal].revealedBy < 50)
+	if (albums[m_albumToReveal].revealAlbum && albums[m_albumToReveal].revealedBy < 50) // moves up record until revealed or switched
 	{
 		albums[m_albumToReveal].moveUp();
 		albums[m_albumToReveal].revealedBy++;
 		std::cout << m_albumToReveal << "revealed by " << albums[m_albumToReveal].revealedBy << std::endl;
 	}
-	else if (albums[m_albumToReveal].revealedBy >= 50)
+	else if (albums[m_albumToReveal].revealedBy >= 50) // when revealed
 	{
 		albums[m_albumToReveal].revealed = true;
 	}
 
-	for (int index = 0; index < ALBUM_NUM; index++)
+	for (int index = 0; index < ALBUM_NUM; index++) // if other albums have been fully or partially revealed but the revealing album has changed, hide
 	{
 		if (albums[index].revealedBy > 0 && index != m_albumToReveal)
 		{
-			if (!hidingSet)
-			{
-				albums[m_albumToReveal].revealed = false;
-				hidingSet = true;
-			}
 			albums[index].moveDown();
 			albums[index].revealedBy--;
 			std::cout << index << "revealed by " << albums[index].revealedBy << std::endl;
@@ -182,7 +173,7 @@ void Game::render()
 	{
 		m_window.draw(albums[index].m_cover); // covers
 	}
-	if (m_getVinyl)
+	if (recordOne.revealed)
 	{
 		m_window.draw(recordOne.vinyl); // draws vinyl if it's activated
 	}
@@ -235,7 +226,7 @@ void Game::setupRecordPlayer()
 
 void Game::processMouseWheel(sf::Event t_event)
 {
-	if (!m_getVinyl) // no more revealing once a vinyl is out
+	if (!recordOne.revealed) // no more revealing once a vinyl is out
 	{
 		m_albumToReveal = m_albumToReveal + t_event.mouseWheel.delta; // mouse -1 or +1 based on direction of wheel movement
 
@@ -266,11 +257,9 @@ void Game::processMousePressed(sf::Event t_event)
 
 		// if the mouse clicks on revealed album, it will move vinyl 
 	if (albums[m_albumToReveal].revealedBy == 50 && //only if fully revealed
-		m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds()) &&
-		m_getVinyl != true &&
+		m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds()) && // if mouse is on the album
 		recordOne.revealed != true) 
 	{
-		m_getVinyl = true;
 		recordOne.moveRight(albums[m_albumToReveal].m_cover.getPosition());
 		std::cout << "revealing vinyl for " << m_albumToReveal << std::endl;
 		recordOne.revealed = true;
@@ -278,17 +267,15 @@ void Game::processMousePressed(sf::Event t_event)
 	}
 		// when clicked again, vinyl hides and user can scroll again
 	else if(m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds()) &&
-			m_getVinyl == true &&
 			recordOne.revealed == true) 
 	{
-		m_getVinyl = false;
 		recordOne.moveRight(sf::Vector2f(0.0f,0.0f));
 		std::cout << "hiding back" << std::endl;
 		recordOne.revealed = false; 
 			
 	}		
 
-	if (m_getVinyl) // checks when getting vinyl (it has been revealed), if mouse is on it (later used for mouse following)
+	if (recordOne.revealed) // checks when getting vinyl (it has been revealed), if mouse is on it (later used for mouse following)
 	{
 		if (m_mouseDot.getGlobalBounds().intersects(recordOne.vinyl.getGlobalBounds()))
 		{

@@ -94,8 +94,8 @@ private:
 	sf::Sound m_purpleFoxTown;
 
 	// Mutter - Rammstein
-	sf::SoundBuffer m_rammsteinBuffer;
-	sf::Sound m_rammstein;
+	sf::SoundBuffer m_ghostBuffer;
+	sf::Sound m_ghost;
 
 	// Custer - Slipknot
 	sf::SoundBuffer m_slipknotBuffer;

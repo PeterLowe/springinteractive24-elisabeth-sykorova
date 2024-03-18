@@ -17,15 +17,12 @@ public:
 	void moveUp();
 	void moveDown();
 
-	void reveal();
-	void hide();
-
 	sf::Vector2f m_firstPoint;
 
 	sf::RectangleShape m_cover;
 	sf::Sprite m_coverSprite;
 
-	float m_coverSideSize = 200.0f; // size of the album's side
+	float m_coverSideSize = 220.0f; // size of the album's side
 	sf::Vector2f m_coverPosition;
 	bool m_revealed = false;
 

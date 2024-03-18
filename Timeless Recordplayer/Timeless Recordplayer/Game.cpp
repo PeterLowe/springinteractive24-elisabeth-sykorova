@@ -348,13 +348,13 @@ void Game::checkVinylPlayerCollision()
 		{
 			case 0:
 				m_purpleFoxTown.play(); // REPLACE with an array 
-				std::cout << "music playing" << std::endl;
+				std::cout << "purpl playing" << std::endl;
 				m_songPlaying = true;
 				break;
 
 			case 1:
-				m_rammstein.play();
-				std::cout << "ram playing" << std::endl;
+				m_ghost.play();
+				std::cout << "ghost playing" << std::endl;
 				m_songPlaying = true;
 				break;
 			
@@ -388,7 +388,7 @@ void Game::checkVinylPlayerCollision()
 		record.hide)
 	{
 		m_purpleFoxTown.stop();
-		m_rammstein.stop();
+		m_ghost.stop();
 		m_slipknot.stop();
 		m_djo.stop();
 		m_vypsanaFixa.stop();
@@ -409,13 +409,13 @@ void Game::setupMusic() // loads song
 	m_purpleFoxTown.setBuffer(m_purpleFoxTownBuffer);
 	m_purpleFoxTown.setVolume(20.0f);
 
-	if (!m_rammsteinBuffer.loadFromFile("ASSETS\\SOUNDS\\Mutter.wav"))
+	if (!m_ghostBuffer.loadFromFile("ASSETS\\SOUNDS\\KissTheGoGoat.wav"))
 	{
 		std::cout << "problem loading mutter audio" << std::endl;
 	}
 
-	m_rammstein.setBuffer(m_rammsteinBuffer);
-	m_rammstein.setVolume(20.0f);
+	m_ghost.setBuffer(m_ghostBuffer);
+	m_ghost.setVolume(20.0f);
 
 	if (!m_slipknotBuffer.loadFromFile("ASSETS\\SOUNDS\\Custer.wav"))
 	{

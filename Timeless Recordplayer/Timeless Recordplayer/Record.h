@@ -11,8 +11,8 @@ public:
 	void setup();
 	void moveRight();
 	void moveLeft();
-	void moveUp(sf::Vector2f t_startingPosition);
 	void followMouse(sf::Vector2f t_mousePosition);
+	void fadeOut();
 
 	sf::Vector2f speed;
 	sf::Vector2f currentPosition;
@@ -27,7 +27,13 @@ public:
 	bool setupForRevealing = false;
 	bool hide = false;
 
+	sf::Texture m_vinylTexture;
+	sf::Sprite m_vinylSprite;
+
 	sf::Color color = (sf::Color::Black);
+	sf::Color spriteColor = (sf::Color::White);
+
+	const int RECORD_REVEAL_BY = 30;
 
 
 };

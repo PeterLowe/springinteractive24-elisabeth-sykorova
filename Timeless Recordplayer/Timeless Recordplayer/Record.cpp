@@ -2,9 +2,23 @@
 
 void Record::setup()
 {
+
+	if (!m_vinylTexture.loadFromFile("ASSETS\\IMAGES\\vinyl.png"))
+	{
+		std::cout << "problem loading arial black font" << std::endl;
+	}
+
+
 	vinyl.setRadius(vinylRadius);
+
 	vinyl.setOrigin(vinylRadius, vinylRadius); //  centre of circle
+	m_vinylSprite.setOrigin(vinylRadius, vinylRadius);
+
 	vinyl.setPosition(vinylPosition);
+	m_vinylSprite.setPosition(vinylPosition);
+
+	m_vinylSprite.setTexture(m_vinylTexture);
+	m_vinylSprite.setColor(spriteColor);
 	vinyl.setFillColor(sf::Color::Black);
 
 }
@@ -14,29 +28,28 @@ void Record::moveRight()
 	speed = { 5.0f,0.0f };
 	vinylPosition += speed;
 	vinyl.setPosition(vinylPosition);
-	//revealed = true;
+	m_vinylSprite.setPosition(vinylPosition);
+
 }
 
 void Record::moveLeft()
 {
 	speed = { -5.0f,0.0f };
 	vinyl.setPosition(vinyl.getPosition() + speed);
-	//revealed = true;
+	m_vinylSprite.setPosition(vinyl.getPosition() + speed);
+
 }
 
 void Record::followMouse(sf::Vector2f t_mousePosition)
 {
 	vinyl.setPosition(t_mousePosition);
-
+	m_vinylSprite.setPosition(t_mousePosition);
 }
 
-void Record::moveUp(sf::Vector2f t_startingPosition)
+void Record::fadeOut()
 {
-	vinylPosition.x = t_startingPosition.x;
-	vinylPosition.y = t_startingPosition.y - 100.0f;
-	speed = { 0.0f,-120.0f };
-	vinylPosition += speed;
-	vinyl.setPosition(vinylPosition);
-	//revealed = true;
+	spriteColor.a -= 255 / RECORD_REVEAL_BY;
+	m_vinylSprite.setColor(spriteColor);
 }
+
 

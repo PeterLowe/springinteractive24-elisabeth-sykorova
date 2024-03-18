@@ -51,8 +51,8 @@ private:
 
 	void setupMusic();
 	sf::Sound songs[ALBUM_NUM];
+	sf::Texture textures[ALBUM_NUM];
 
-	void loadTextures();
 
 	sf::RectangleShape square;
 
@@ -64,7 +64,6 @@ private:
 	bool m_exitGame; // control exiting game
 
 
-
 	Album albums[ALBUM_NUM];
 	Record record;
 
@@ -72,8 +71,6 @@ private:
 	sf::Vector2f m_mouseEndVector;
 	sf::CircleShape m_mouseDot{1.0f};
 
-	sf::Texture m_purpleFoxTexture;
-	sf::Texture m_fleetwoodTexture;
 
 	
 

@@ -66,7 +66,7 @@ private:
 
 
 	Album albums[ALBUM_NUM];
-	Record recordOne;
+	Record record;
 
 	sf::Vector2i m_mouseEnd;
 	sf::Vector2f m_mouseEndVector;
@@ -101,6 +101,8 @@ private:
 	bool m_songPlaying = false;
 
 	bool hidingSet = true;
+
+	const int MAX_REVEALED_BY = 30;
 
 
 	

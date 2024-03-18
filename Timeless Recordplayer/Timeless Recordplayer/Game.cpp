@@ -24,10 +24,10 @@ Game::Game() :
 
 	for (int index = 0; index < ALBUM_NUM; index++) // setups all the covers based on the amount of albums declared
 	{
-		albums[index].setupCover(250.0f + (index * 20.0f), 450.0f - (index * 30.0f));
+		albums[index].setupCover(250.0f + (index * 10.0f), 500.0f - (index * 30.0f)); // first point of the first album relative to index
 	}
 
-	recordOne.setup();
+	record.setup();
 	setupRecordPlayer();
 	setupMusic();
 }
@@ -132,13 +132,13 @@ void Game::update(sf::Time t_deltaTime)
 	}
 	checkVinylPlayerCollision(); // checks if vinyl is on record player - plays music if true
 
-	if (albums[m_albumToReveal].revealAlbum && albums[m_albumToReveal].revealedBy < 50) // moves up record until revealed or switched
+	if (albums[m_albumToReveal].revealAlbum && albums[m_albumToReveal].revealedBy < MAX_REVEALED_BY) // moves up record until revealed or switched
 	{
 		albums[m_albumToReveal].moveUp();
 		albums[m_albumToReveal].revealedBy++;
 		std::cout << m_albumToReveal << "revealed by " << albums[m_albumToReveal].revealedBy << std::endl;
 	}
-	else if (albums[m_albumToReveal].revealedBy >= 50) // when revealed
+	else if (albums[m_albumToReveal].revealedBy >= MAX_REVEALED_BY) // when revealed
 	{
 		albums[m_albumToReveal].revealed = true;
 	}
@@ -156,6 +156,41 @@ void Game::update(sf::Time t_deltaTime)
 			albums[m_albumToReveal].revealed = false;
 		}
 	}
+
+	if (record.reveal && record.revealedBy < MAX_REVEALED_BY)
+	{
+		if (!record.setupForRevealing)
+		{
+			record.vinylPosition = sf::Vector2f(albums[m_albumToReveal].m_cover.getPosition().x - 100.0f,
+									albums[m_albumToReveal].m_cover.getPosition().y - 100.0f);
+			record.color.a = 0;
+			record.vinyl.setFillColor(record.color);
+			record.setupForRevealing = true;
+		}
+		record.moveRight();
+		record.color.a += 255 / MAX_REVEALED_BY;
+		record.vinyl.setFillColor(record.color);
+		record.revealedBy++;
+	}
+	else if (record.revealedBy >= MAX_REVEALED_BY)
+	{
+		record.reveal = false;
+		record.revealed = true;
+	}
+
+	if (record.hide && record.revealedBy > 0)
+	{
+		record.moveLeft();
+		record.color.a -= 255 / MAX_REVEALED_BY;
+		record.vinyl.setFillColor(record.color);
+		record.revealedBy--;
+	}
+	else if (record.revealedBy <= 0)
+	{
+		record.setupForRevealing = false;
+		record.revealed = false;
+		record.hide = false;
+	}
 }
 
 	
@@ -169,13 +204,14 @@ void Game::render()
 
 	m_window.draw(m_recordPlayer); // recordplayer
 
+
 	for (int index = ALBUM_NUM - 1; index >= 0; index--)
 	{
+		if ((record.revealed || record.reveal) && record.setupForRevealing && index == m_albumToReveal)
+		{
+			m_window.draw(record.vinyl); // draws vinyl if it's activated
+		}
 		m_window.draw(albums[index].m_cover); // covers
-	}
-	if (recordOne.revealed)
-	{
-		m_window.draw(recordOne.vinyl); // draws vinyl if it's activated
 	}
 
 	m_window.display();
@@ -205,12 +241,12 @@ void Game::setupFontAndText()
 void Game::processMouseMovement(sf::Event t_event) // if mouse is moving 
 {
 	// checks if vinyl is activated and revealed, if mouse is not revealed and if mouse is on colliding with vinyl
-	if (recordOne.revealed && !m_mouseReleased && m_mouseOnVinyl)
+	if (record.revealed && !m_mouseReleased && m_mouseOnVinyl)
 	{
 		m_mouseEnd = sf::Mouse::getPosition(m_window);
 		m_mouseEndVector.x = static_cast<float>(m_mouseEnd.x);
 		m_mouseEndVector.y = static_cast<float>(m_mouseEnd.y);
-		recordOne.followMouse(m_mouseEndVector);
+		record.followMouse(m_mouseEndVector);
 		m_holdingVinyl = true;
 	}
 	// if true, calls function for vinyl that follows the mouse
@@ -218,15 +254,15 @@ void Game::processMouseMovement(sf::Event t_event) // if mouse is moving
 
 void Game::setupRecordPlayer()
 {
-	const sf::Vector2f size {200.0f, 80.0f};
+	const sf::Vector2f size {220.0f, 220.0f};
 	m_recordPlayer.setFillColor(sf::Color::Green);
 	m_recordPlayer.setSize(size);
-	m_recordPlayer.setPosition(500.0f, 400.0f);
+	m_recordPlayer.setPosition(500.0f, 200.0f);
 }
 
 void Game::processMouseWheel(sf::Event t_event)
 {
-	if (!recordOne.revealed) // no more revealing once a vinyl is out
+	if (!record.revealed) // no more revealing once a vinyl is out
 	{
 		m_albumToReveal = m_albumToReveal + t_event.mouseWheel.delta; // mouse -1 or +1 based on direction of wheel movement
 
@@ -256,28 +292,28 @@ void Game::processMousePressed(sf::Event t_event)
 	
 
 		// if the mouse clicks on revealed album, it will move vinyl 
-	if (albums[m_albumToReveal].revealedBy == 50 && //only if fully revealed
+	if (albums[m_albumToReveal].revealedBy == MAX_REVEALED_BY && //only if fully revealed
 		m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds()) && // if mouse is on the album
-		recordOne.revealed != true) 
+		record.revealed != true) 
 	{
-		recordOne.moveRight(albums[m_albumToReveal].m_cover.getPosition());
+		record.reveal = true;
 		std::cout << "revealing vinyl for " << m_albumToReveal << std::endl;
-		recordOne.revealed = true;
+		//record.revealed = true;
 
 	}
 		// when clicked again, vinyl hides and user can scroll again
 	else if(m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds()) &&
-			recordOne.revealed == true) 
+			record.revealed == true) 
 	{
-		recordOne.moveRight(sf::Vector2f(0.0f,0.0f));
+		record.hide = true;
 		std::cout << "hiding back" << std::endl;
-		recordOne.revealed = false; 
+		//record.revealed = false; 
 			
 	}		
 
-	if (recordOne.revealed) // checks when getting vinyl (it has been revealed), if mouse is on it (later used for mouse following)
+	if (record.revealed) // checks when getting vinyl (it has been revealed), if mouse is on it (later used for mouse following)
 	{
-		if (m_mouseDot.getGlobalBounds().intersects(recordOne.vinyl.getGlobalBounds()))
+		if (m_mouseDot.getGlobalBounds().intersects(record.vinyl.getGlobalBounds()))
 		{
 			m_mouseOnVinyl = true;
 		}
@@ -292,7 +328,7 @@ void Game::processMousePressed(sf::Event t_event)
 void Game::checkVinylPlayerCollision()
 {
 	// if vinyl is released on recordplayer, music plays
-	if (m_recordPlayer.getGlobalBounds().intersects(recordOne.vinyl.getGlobalBounds()) && m_mouseReleased && m_songPlaying != true)
+	if (m_recordPlayer.getGlobalBounds().intersects(record.vinyl.getGlobalBounds()) && m_mouseReleased && m_songPlaying != true && record.revealed)
 	{
 		switch(m_albumToReveal)
 		{
@@ -310,7 +346,8 @@ void Game::checkVinylPlayerCollision()
 		}
 
 	}
-	if (m_songPlaying == true && !(m_recordPlayer.getGlobalBounds().intersects(recordOne.vinyl.getGlobalBounds())))
+	if ((m_songPlaying == true && !(m_recordPlayer.getGlobalBounds().intersects(record.vinyl.getGlobalBounds()))) ||
+		record.hide)
 	{
 		m_purpleFoxTown.stop();
 		m_rammstein.stop();

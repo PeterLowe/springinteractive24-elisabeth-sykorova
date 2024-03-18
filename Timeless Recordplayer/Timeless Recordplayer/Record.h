@@ -9,7 +9,9 @@ class Record
 public:
 	sf::CircleShape vinyl;
 	void setup();
-	void moveRight(sf::Vector2f t_startingPosition);
+	void moveRight();
+	void moveLeft();
+	void moveUp(sf::Vector2f t_startingPosition);
 	void followMouse(sf::Vector2f t_mousePosition);
 
 	sf::Vector2f speed;
@@ -20,6 +22,12 @@ public:
 
 	bool revealed = false;
 
+	int revealedBy = 0;
+	bool reveal = false;
+	bool setupForRevealing = false;
+	bool hide = false;
+
+	sf::Color color = (sf::Color::Black);
 
 
 };

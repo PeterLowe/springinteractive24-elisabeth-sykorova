@@ -29,7 +29,7 @@ void Album::setupCover(float t_firstX, float t_firstY)
 // moves all the points up by 1 pixel
 void Album::moveUp()
 {
-	speed = { 0.0f, -1.0f };
+	speed = { 0.0f, -3.0f };
 	coverPosition = m_cover.getPosition() + speed;
 	m_cover.setPosition(coverPosition);
 
@@ -37,7 +37,7 @@ void Album::moveUp()
 
 void Album::moveDown()
 {
-	speed = { 0.0f, 1.0f };
+	speed = { 0.0f, 3.0f };
 	coverPosition = m_cover.getPosition() + speed;
 	m_cover.setPosition(coverPosition);
 

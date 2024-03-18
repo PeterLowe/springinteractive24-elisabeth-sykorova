@@ -84,6 +84,8 @@ private:
 
 
 	sf::RectangleShape m_recordPlayer;
+	sf::Sprite m_recordPlayerSprite;
+	sf::Texture m_recordPlayerTexture;
 
 
 	//songs
@@ -94,6 +96,25 @@ private:
 	// Mutter - Rammstein
 	sf::SoundBuffer m_rammsteinBuffer;
 	sf::Sound m_rammstein;
+
+	// Custer - Slipknot
+	sf::SoundBuffer m_slipknotBuffer;
+	sf::Sound m_slipknot;
+
+	// Enjoy the Silence - Depeche Mode
+	sf::SoundBuffer m_depecheBuffer;
+	sf::Sound m_depeche;
+
+	// End of the Beginning - DJO
+	sf::SoundBuffer m_djoBuffer;
+	sf::Sound m_djo;
+
+	// Ivan Trojan - Vypsana fixa
+	sf::SoundBuffer m_vypsanaFixaBuffer;
+	sf::Sound m_vypsanaFixa;
+
+
+
 
 	bool m_songPlaying = false;
 

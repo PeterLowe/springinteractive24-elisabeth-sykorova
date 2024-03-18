@@ -137,7 +137,6 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		albums[m_albumToReveal].moveUp();
 		albums[m_albumToReveal].m_revealedBy++;
-		std::cout << m_albumToReveal << "revealed by " << albums[m_albumToReveal].m_revealedBy << std::endl;
 	}
 	else if (albums[m_albumToReveal].m_revealedBy >= MAX_REVEALED_BY) // when revealed
 	{
@@ -150,7 +149,6 @@ void Game::update(sf::Time t_deltaTime)
 		{
 			albums[index].moveDown();
 			albums[index].m_revealedBy--;
-			std::cout << index << "revealed by " << albums[index].m_revealedBy << std::endl;
 		}
 		else if (albums[index].m_revealedBy > 0 && index != m_albumToReveal)
 		{
@@ -181,7 +179,7 @@ void Game::update(sf::Time t_deltaTime)
 
 	if (record.hide && record.revealedBy > 0)
 	{
-		//record.moveLeft();
+		record.moveLeft();
 
 		record.fadeOut(); // fades out when hiding
 
@@ -205,6 +203,7 @@ void Game::render()
 	m_window.clear(sf::Color::White);
 
 	m_window.draw(m_recordPlayer); // recordplayer
+	m_window.draw(m_recordPlayerSprite);
 
 
 	for (int index = ALBUM_NUM - 1; index >= 0; index--)
@@ -214,7 +213,7 @@ void Game::render()
 			//m_window.draw(record.vinyl); // draws vinyl if it's activated
 			m_window.draw(record.m_vinylSprite);
 		}
-		m_window.draw(albums[index].m_cover); // covers
+		//m_window.draw(albums[index].m_cover); // covers
 		m_window.draw(albums[index].m_coverSprite);
 	}
 
@@ -264,6 +263,17 @@ void Game::setupRecordPlayer()
 	m_recordPlayer.setFillColor(sf::Color::Green);
 	m_recordPlayer.setSize(size);
 	m_recordPlayer.setPosition(500.0f, 200.0f);
+
+	// sprite
+	if (!m_recordPlayerTexture.loadFromFile("ASSETS\\IMAGES\\recordPlayer.png"))
+	{
+		std::cout << "problem loading recpla" << std::endl;
+	}
+
+	m_recordPlayerSprite.setOrigin(180.0f, 205.0f);
+	m_recordPlayerSprite.setPosition(580.0, 320.f);
+	m_recordPlayerSprite.setScale(0.8, 0.8);
+	m_recordPlayerSprite.setTexture(m_recordPlayerTexture);
 }
 
 void Game::processMouseWheel(sf::Event t_event)
@@ -303,7 +313,6 @@ void Game::processMousePressed(sf::Event t_event)
 		record.revealed != true) 
 	{
 		record.reveal = true;
-		std::cout << "revealing vinyl for " << m_albumToReveal << std::endl;
 		//record.revealed = true;
 
 	}
@@ -312,7 +321,6 @@ void Game::processMousePressed(sf::Event t_event)
 			record.revealed == true) 
 	{
 		record.hide = true;
-		std::cout << "hiding back" << std::endl;
 		//record.revealed = false; 
 			
 	}		
@@ -349,6 +357,30 @@ void Game::checkVinylPlayerCollision()
 				std::cout << "ram playing" << std::endl;
 				m_songPlaying = true;
 				break;
+			
+			case 2:
+				m_slipknot.play();
+				std::cout << "slipk" << std::endl;
+				m_songPlaying = true;
+				break;
+
+			case 3:
+				m_vypsanaFixa.play();
+				std::cout << "fix" << std::endl;
+				m_songPlaying = true;
+				break;
+
+			case 4:
+				m_depeche.play();
+				std::cout << "depeche" << std::endl;
+				m_songPlaying = true;
+				break;
+
+			case 5:
+				m_djo.play();
+				std::cout << "end of b" << std::endl;
+				m_songPlaying = true;
+				break;
 		}
 
 	}
@@ -357,6 +389,12 @@ void Game::checkVinylPlayerCollision()
 	{
 		m_purpleFoxTown.stop();
 		m_rammstein.stop();
+		m_slipknot.stop();
+		m_djo.stop();
+		m_vypsanaFixa.stop();
+		m_depeche.stop();
+
+
 		m_songPlaying = false;
 	}
 }
@@ -378,6 +416,39 @@ void Game::setupMusic() // loads song
 
 	m_rammstein.setBuffer(m_rammsteinBuffer);
 	m_rammstein.setVolume(20.0f);
+
+	if (!m_slipknotBuffer.loadFromFile("ASSETS\\SOUNDS\\Custer.wav"))
+	{
+		std::cout << "problem loading slipknot audio" << std::endl;
+	}
+
+	m_slipknot.setBuffer(m_slipknotBuffer);
+	m_slipknot.setVolume(20.0f);
+
+	if (!m_depecheBuffer.loadFromFile("ASSETS\\SOUNDS\\EnjoyTheSilence.wav"))
+	{
+		std::cout << "problem loading enjoy the silence audio" << std::endl;
+	}
+
+	m_depeche.setBuffer(m_depecheBuffer);
+	m_depeche.setVolume(20.0f);
+
+	if (!m_djoBuffer.loadFromFile("ASSETS\\SOUNDS\\endOfBeginning.wav"))
+	{
+		std::cout << "problem loading djo audio" << std::endl;
+	}
+
+	m_djo.setBuffer(m_djoBuffer);
+	m_djo.setVolume(20.0f);
+
+	if (!m_vypsanaFixaBuffer.loadFromFile("ASSETS\\SOUNDS\\IvanTrojan.wav"))
+	{
+		std::cout << "problem loading fixa audio" << std::endl;
+	}
+
+	m_vypsanaFixa.setBuffer(m_vypsanaFixaBuffer);
+	m_vypsanaFixa.setVolume(20.0f);
+
 
 }
 

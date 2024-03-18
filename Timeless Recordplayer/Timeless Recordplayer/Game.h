@@ -50,6 +50,8 @@ private:
 	void checkVinylPlayerCollision();
 
 	void setupMusic();
+	void setupBackground();
+
 	sf::Sound songs[ALBUM_NUM];
 	sf::Texture textures[ALBUM_NUM];
 
@@ -86,6 +88,9 @@ private:
 	sf::RectangleShape m_recordPlayer;
 	sf::Sprite m_recordPlayerSprite;
 	sf::Texture m_recordPlayerTexture;
+
+	sf::Sprite m_backgroundSprite;
+	sf::Texture m_backgroundTexture;
 
 
 	//songs

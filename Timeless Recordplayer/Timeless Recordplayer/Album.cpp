@@ -15,7 +15,7 @@ void Album::setupCover(int index)
 	int blue = (rand() % 256) + 1;
 	int opacity = 255;
 
-	sf::Vector2f coverPosition = { 270.0f + (index * 15.0f), 500.0f - (index * 30.0f)};
+	sf::Vector2f coverPosition = { 350.0f - (index * 13.0f), 520.0f - (index * 34.0f)};
 
 	m_cover.setPosition(coverPosition);
 	m_coverSprite.setPosition(300.0f, 300.0f);

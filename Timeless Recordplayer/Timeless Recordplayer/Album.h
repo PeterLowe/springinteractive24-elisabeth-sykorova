@@ -22,7 +22,7 @@ public:
 	sf::RectangleShape m_cover;
 	sf::Sprite m_coverSprite;
 
-	float m_coverSideSize = 220.0f; // size of the album's side
+	float m_coverSideSize = 250.0f; // size of the album's side
 	sf::Vector2f m_coverPosition;
 	bool m_revealed = false;
 

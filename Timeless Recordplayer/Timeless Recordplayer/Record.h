@@ -17,7 +17,7 @@ public:
 	sf::Vector2f speed;
 	sf::Vector2f currentPosition;
 
-	float vinylRadius = 90;
+	float vinylRadius = 97;
 	sf::Vector2f vinylPosition{0.0f, 0.0f};
 
 	bool revealed = false;

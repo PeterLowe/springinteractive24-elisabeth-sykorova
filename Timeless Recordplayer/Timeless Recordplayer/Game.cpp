@@ -30,7 +30,8 @@ Game::Game() :
 
 	record.setup();
 	setupRecordPlayer();
-	setupMusic();
+	//setupMusic();
+	//setupBackground();
 }
 
 /// <summary>
@@ -160,8 +161,8 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		if (!record.setupForRevealing)
 		{
-			record.vinylPosition = sf::Vector2f(albums[m_albumToReveal].m_cover.getPosition().x - 100.0f,
-									albums[m_albumToReveal].m_cover.getPosition().y - 100.0f);
+			record.vinylPosition = sf::Vector2f(albums[m_albumToReveal].m_cover.getPosition().x - 127,
+									albums[m_albumToReveal].m_cover.getPosition().y - 135);
 
 			record.spriteColor.a = 255;
 			record.m_vinylSprite.setColor(record.spriteColor);
@@ -201,16 +202,18 @@ void Game::update(sf::Time t_deltaTime)
 void Game::render()
 {
 	m_window.clear(sf::Color::White);
+	m_window.draw(m_backgroundSprite);
 
-	m_window.draw(m_recordPlayer); // recordplayer
+
 	m_window.draw(m_recordPlayerSprite);
+	//m_window.draw(m_recordPlayer); // recordplayer
 
 
 	for (int index = ALBUM_NUM - 1; index >= 0; index--)
 	{
 		if ((record.revealed || record.reveal) && record.setupForRevealing && index == m_albumToReveal)
 		{
-			//m_window.draw(record.vinyl); // draws vinyl if it's activated
+			/*m_window.draw(record.vinyl);*/ // draws vinyl if it's activated
 			m_window.draw(record.m_vinylSprite);
 		}
 		//m_window.draw(albums[index].m_cover); // covers
@@ -259,10 +262,10 @@ void Game::processMouseMovement(sf::Event t_event) // if mouse is moving
 
 void Game::setupRecordPlayer()
 {
-	const sf::Vector2f size {220.0f, 220.0f};
+	const sf::Vector2f size {220.0f, 140.0f};
 	m_recordPlayer.setFillColor(sf::Color::Green);
 	m_recordPlayer.setSize(size);
-	m_recordPlayer.setPosition(500.0f, 200.0f);
+	m_recordPlayer.setPosition(470.0f, 317.0f);
 
 	// sprite
 	if (!m_recordPlayerTexture.loadFromFile("ASSETS\\IMAGES\\recordPlayer.png"))
@@ -271,8 +274,8 @@ void Game::setupRecordPlayer()
 	}
 
 	m_recordPlayerSprite.setOrigin(180.0f, 205.0f);
-	m_recordPlayerSprite.setPosition(580.0, 320.f);
-	m_recordPlayerSprite.setScale(0.8, 0.8);
+	m_recordPlayerSprite.setPosition(580.0, 300.f);
+	m_recordPlayerSprite.setScale(0.92, 0.92);
 	m_recordPlayerSprite.setTexture(m_recordPlayerTexture);
 }
 
@@ -353,34 +356,35 @@ void Game::checkVinylPlayerCollision()
 				break;
 
 			case 1:
-				m_ghost.play();
-				std::cout << "ghost playing" << std::endl;
-				m_songPlaying = true;
-				break;
-			
-			case 2:
 				m_slipknot.play();
 				std::cout << "slipk" << std::endl;
 				m_songPlaying = true;
 				break;
 
-			case 3:
+			case 2:
 				m_vypsanaFixa.play();
 				std::cout << "fix" << std::endl;
 				m_songPlaying = true;
 				break;
 
-			case 4:
+			case 3:
 				m_depeche.play();
 				std::cout << "depeche" << std::endl;
 				m_songPlaying = true;
 				break;
 
-			case 5:
+			case 4:
 				m_djo.play();
 				std::cout << "end of b" << std::endl;
 				m_songPlaying = true;
 				break;
+
+			case 5:
+				m_ghost.play();
+				std::cout << "ghost playing" << std::endl;
+				m_songPlaying = true;
+				break;
+
 		}
 
 	}
@@ -449,6 +453,17 @@ void Game::setupMusic() // loads song
 	m_vypsanaFixa.setBuffer(m_vypsanaFixaBuffer);
 	m_vypsanaFixa.setVolume(20.0f);
 
+
+}
+
+void Game::setupBackground()
+{
+	if (!m_backgroundTexture.loadFromFile("ASSETS\\IMAGES\\background.png"))
+	{
+		std::cout << "problem loading backgr" << std::endl;
+	}
+
+	m_backgroundSprite.setTexture(m_backgroundTexture);
 
 }
 

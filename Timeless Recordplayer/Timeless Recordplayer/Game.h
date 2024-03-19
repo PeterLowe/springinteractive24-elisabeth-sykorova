@@ -42,6 +42,7 @@ private:
 	void processMouseMovement(sf::Event t_event);
 	//void setupAlbum(float t_firstPointX, float t_firstPointY);
 	void setupRecordPlayer();
+	void animateRecordplayer();
 
 
 	void processMouseWheel(sf::Event t_event);
@@ -91,6 +92,7 @@ private:
 	sf::Texture m_recordPlayerTexture;
 	sf::Texture m_recordplayerActive1;
 	sf::Texture m_recordplayerActive2;
+	sf::Texture m_recordplayerActive3;
 
 	sf::Sprite m_backgroundSprite;
 	sf::Texture m_backgroundTexture;
@@ -129,6 +131,10 @@ private:
 	bool hidingSet = true;
 
 	const int MAX_REVEALED_BY = 30;
+
+	float frameCounter = 0;
+	int currentFrame = 0;
+	float frameIncrement = 0.052;
 
 
 	

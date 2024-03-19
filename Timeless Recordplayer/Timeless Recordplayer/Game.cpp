@@ -31,7 +31,7 @@ Game::Game() :
 	record.setup();
 	setupRecordPlayer();
 	setupMusic();
-	setupBackground();
+	//setupBackground();
 }
 
 /// <summary>
@@ -195,7 +195,7 @@ void Game::update(sf::Time t_deltaTime)
 
 	if (m_vinylDropped)
 	{
-		m_recordPlayerSprite.setTexture(m_recordplayerActive1);
+		animateRecordplayer();
 	}
 	else
 	{
@@ -287,15 +287,42 @@ void Game::setupRecordPlayer()
 		std::cout << "problem loading rp active 1" << std::endl;
 	}
 
-	if (!m_recordplayerActive2.loadFromFile("ASSETS\\IMAGES\\recordplayerActive.png"))
+	if (!m_recordplayerActive2.loadFromFile("ASSETS\\IMAGES\\recordplayerActive2.png"))
 	{
 		std::cout << "problem loading rp active 2" << std::endl;
+	}
+
+	if (!m_recordplayerActive3.loadFromFile("ASSETS\\IMAGES\\recordplayerActive3.png"))
+	{
+		std::cout << "problem loading rp active 3" << std::endl;
 	}
 
 	m_recordPlayerSprite.setOrigin(180.0f, 205.0f);
 	m_recordPlayerSprite.setPosition(580.0, 300.f);
 	m_recordPlayerSprite.setScale(0.92, 0.92);
 	m_recordPlayerSprite.setTexture(m_recordPlayerTexture);
+}
+
+void Game::animateRecordplayer()
+{
+	if (currentFrame == 0)
+	{
+		m_recordPlayerSprite.setTexture(m_recordplayerActive1);
+		std::cout << "active 1" << std::endl;
+	}
+	else if (currentFrame == 1)
+	{
+		m_recordPlayerSprite.setTexture(m_recordplayerActive3);
+		std::cout << "active 3" << std::endl;
+	}
+
+	currentFrame = static_cast<int>(frameCounter);
+	frameCounter += frameIncrement;
+
+	if (frameCounter > 2)
+	{
+		frameCounter = 0;
+	}
 }
 
 void Game::processMouseWheel(sf::Event t_event)
@@ -381,12 +408,14 @@ void Game::checkVinylPlayerCollision()
 				m_purpleFoxTown.play(); // REPLACE with an array 
 				std::cout << "purpl playing" << std::endl;
 				m_songPlaying = true;
+				frameIncrement = 0.052;
 				break;
 
 			case 1:
 				m_slipknot.play();
 				std::cout << "slipk" << std::endl;
 				m_songPlaying = true;
+				frameIncrement = 0.1;
 				break;
 
 			case 2:

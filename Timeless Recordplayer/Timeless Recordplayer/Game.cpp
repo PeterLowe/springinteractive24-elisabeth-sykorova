@@ -31,7 +31,7 @@ Game::Game() :
 	record.setup();
 	setupRecordPlayer();
 	setupMusic();
-	//setupBackground();
+	setupBackground();
 }
 
 /// <summary>
@@ -95,6 +95,7 @@ void Game::processEvents()
 		{
 			processMousePressed(newEvent);
 			m_mouseReleased = false;
+
 		}
 
 		if (sf::Event::MouseMoved == newEvent.type)
@@ -103,6 +104,7 @@ void Game::processEvents()
 		}
 		if (sf::Event::MouseButtonReleased == newEvent.type)
 		{
+			processMouseReleased(newEvent);
 			m_mouseReleased = true;
 		}
 		
@@ -133,6 +135,7 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 	checkVinylPlayerCollision(); // checks if vinyl is on record player - plays music if true
+	checkVinylAlbumCollision();
 
 	if (albums[m_albumToReveal].m_revealAlbum && albums[m_albumToReveal].m_revealedBy < MAX_REVEALED_BY) // moves up record until revealed or switched
 	{
@@ -258,7 +261,8 @@ void Game::setupFontAndText()
 void Game::processMouseMovement(sf::Event t_event) // if mouse is moving 
 {
 	// checks if vinyl is activated and revealed, if mouse is not revealed and if mouse is on colliding with vinyl
-	if (record.revealed && !m_mouseReleased && m_mouseOnVinyl)
+	if (record.revealed && !m_mouseReleased && m_mouseOnVinyl &&
+		!(m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds())))
 	{
 		m_mouseEnd = sf::Mouse::getPosition(m_window);
 		m_mouseEndVector.x = static_cast<float>(m_mouseEnd.x);
@@ -357,32 +361,43 @@ void Game::processMousePressed(sf::Event t_event)
 	
 
 		// if the mouse clicks on revealed album, it will move vinyl 
+
+		// when clicked again, vinyl hides and user can scroll again
+
+	if (record.revealed) // checks when getting vinyl (it has been revealed), if mouse is on it (later used for mouse following)
+	{
+		m_mouseOnVinyl = m_mouseDot.getGlobalBounds().intersects(record.vinyl.getGlobalBounds());
+
+		//if (m_mouseDot.getGlobalBounds().intersects(record.vinyl.getGlobalBounds()))
+		//{
+		//	m_mouseOnVinyl = true;
+		//}
+		//else
+		//{
+		//	m_mouseOnVinyl = false;
+		//}
+	}
+
+}
+
+void Game::processMouseReleased(sf::Event t_event)
+{
+
+	if (m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds()) &&
+		record.revealed)
+	{
+			record.hide = true;
+
+	}
+
 	if (albums[m_albumToReveal].m_revealedBy == MAX_REVEALED_BY && //only if fully revealed
 		m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds()) && // if mouse is on the album
-		record.revealed != true) 
+		record.revealed != true)
 	{
 		record.reveal = true;
 
 	}
-		// when clicked again, vinyl hides and user can scroll again
-	else if(m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds()) &&
-			record.revealed == true) 
-	{
-		record.hide = true;
-			
-	}		
 
-	if (record.revealed) // checks when getting vinyl (it has been revealed), if mouse is on it (later used for mouse following)
-	{
-		if (m_mouseDot.getGlobalBounds().intersects(record.vinyl.getGlobalBounds()))
-		{
-			m_mouseOnVinyl = true;
-		}
-		else
-		{
-			m_mouseOnVinyl = false;
-		}
-	}
 
 }
 
@@ -463,6 +478,21 @@ void Game::checkVinylPlayerCollision()
 		m_songPlaying = false;
 	}
 }
+
+void Game::checkVinylAlbumCollision()
+{
+	if (albums[m_albumToReveal].m_cover.getGlobalBounds().intersects(record.vinyl.getGlobalBounds()) && m_mouseReleased && !record.reveal && m_holdingVinyl)
+	{
+		record.hide = true;
+
+		m_holdingVinyl = false;
+		m_hidingByDropping = true;
+
+	}
+
+
+}
+
 
 void Game::setupMusic() // loads song
 {

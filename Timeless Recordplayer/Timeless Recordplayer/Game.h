@@ -47,8 +47,10 @@ private:
 
 	void processMouseWheel(sf::Event t_event);
 	void processMousePressed(sf::Event t_event);
+	void processMouseReleased(sf::Event t_event);
 
 	void checkVinylPlayerCollision();
+	void checkVinylAlbumCollision();
 
 	void setupMusic();
 	void setupBackground();
@@ -85,6 +87,7 @@ private:
 	bool m_mouseReleased = true;
 	bool m_mouseOnVinyl = false;
 	bool m_vinylDropped = false;
+	bool m_hidingByDropping = false;
 
 
 	sf::RectangleShape m_recordPlayer;

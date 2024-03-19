@@ -83,11 +83,14 @@ private:
 
 	bool m_mouseReleased = true;
 	bool m_mouseOnVinyl = false;
+	bool m_vinylDropped = false;
 
 
 	sf::RectangleShape m_recordPlayer;
 	sf::Sprite m_recordPlayerSprite;
 	sf::Texture m_recordPlayerTexture;
+	sf::Texture m_recordplayerActive1;
+	sf::Texture m_recordplayerActive2;
 
 	sf::Sprite m_backgroundSprite;
 	sf::Texture m_backgroundTexture;

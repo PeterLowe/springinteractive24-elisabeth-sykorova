@@ -30,8 +30,8 @@ Game::Game() :
 
 	record.setup();
 	setupRecordPlayer();
-	//setupMusic();
-	//setupBackground();
+	setupMusic();
+	setupBackground();
 }
 
 /// <summary>
@@ -192,6 +192,15 @@ void Game::update(sf::Time t_deltaTime)
 		record.revealed = false;
 		record.hide = false;
 	}
+
+	if (m_vinylDropped)
+	{
+		m_recordPlayerSprite.setTexture(m_recordplayerActive1);
+	}
+	else
+	{
+		m_recordPlayerSprite.setTexture(m_recordPlayerTexture);
+	}
 }
 
 	
@@ -206,17 +215,17 @@ void Game::render()
 
 
 	m_window.draw(m_recordPlayerSprite);
-	//m_window.draw(m_recordPlayer); // recordplayer
+	//m_window.draw(m_recordPlayer); // recordplayer debug
 
 
 	for (int index = ALBUM_NUM - 1; index >= 0; index--)
 	{
-		if ((record.revealed || record.reveal) && record.setupForRevealing && index == m_albumToReveal)
+		if ((record.revealed || record.reveal) && record.setupForRevealing && index == m_albumToReveal && !m_vinylDropped)
 		{
-			/*m_window.draw(record.vinyl);*/ // draws vinyl if it's activated
+		/*	m_window.draw(record.vinyl);*/ // draws vinyl if it's activated  debug
 			m_window.draw(record.m_vinylSprite);
 		}
-		//m_window.draw(albums[index].m_cover); // covers
+		//m_window.draw(albums[index].m_cover); // covers debug
 		m_window.draw(albums[index].m_coverSprite);
 	}
 
@@ -262,15 +271,25 @@ void Game::processMouseMovement(sf::Event t_event) // if mouse is moving
 
 void Game::setupRecordPlayer()
 {
-	const sf::Vector2f size {220.0f, 140.0f};
+	const sf::Vector2f size {10.0f, 40.0f};
 	m_recordPlayer.setFillColor(sf::Color::Green);
 	m_recordPlayer.setSize(size);
-	m_recordPlayer.setPosition(470.0f, 317.0f);
+	m_recordPlayer.setPosition(560.0f, 360.0f);
 
 	// sprite
 	if (!m_recordPlayerTexture.loadFromFile("ASSETS\\IMAGES\\recordPlayer.png"))
 	{
 		std::cout << "problem loading recpla" << std::endl;
+	}
+
+	if (!m_recordplayerActive1.loadFromFile("ASSETS\\IMAGES\\recordplayerActive.png"))
+	{
+		std::cout << "problem loading rp active 1" << std::endl;
+	}
+
+	if (!m_recordplayerActive2.loadFromFile("ASSETS\\IMAGES\\recordplayerActive.png"))
+	{
+		std::cout << "problem loading rp active 2" << std::endl;
 	}
 
 	m_recordPlayerSprite.setOrigin(180.0f, 205.0f);
@@ -316,7 +335,6 @@ void Game::processMousePressed(sf::Event t_event)
 		record.revealed != true) 
 	{
 		record.reveal = true;
-		//record.revealed = true;
 
 	}
 		// when clicked again, vinyl hides and user can scroll again
@@ -324,7 +342,6 @@ void Game::processMousePressed(sf::Event t_event)
 			record.revealed == true) 
 	{
 		record.hide = true;
-		//record.revealed = false; 
 			
 	}		
 
@@ -345,8 +362,19 @@ void Game::processMousePressed(sf::Event t_event)
 void Game::checkVinylPlayerCollision()
 {
 	// if vinyl is released on recordplayer, music plays
-	if (m_recordPlayer.getGlobalBounds().intersects(record.vinyl.getGlobalBounds()) && m_mouseReleased && m_songPlaying != true && record.revealed)
+	if (m_recordPlayer.getGlobalBounds().intersects(record.vinyl.getGlobalBounds()) && m_mouseReleased && m_songPlaying != true && record.revealed
+		&& record.hide != true)
 	{
+		if (!m_vinylDropped)
+		{
+			m_vinylDropped = true;
+			std::cout << "vinyl dropped";
+			record.vinyl.setPosition(m_recordPlayer.getPosition().x + (m_recordPlayer.getSize().x)/ 2 - 50.0f,
+									m_recordPlayer.getPosition().y + (m_recordPlayer.getSize().y) / 2); // 50.0f is offset for the texture to make sense
+
+			record.m_vinylSprite.setPosition(m_recordPlayer.getPosition().x + (m_recordPlayer.getSize().x) / 2 - 50.0f,
+				m_recordPlayer.getPosition().y + (m_recordPlayer.getSize().y) / 2);
+		}
 		switch(m_albumToReveal)
 		{
 			case 0:
@@ -388,16 +416,20 @@ void Game::checkVinylPlayerCollision()
 		}
 
 	}
-	if ((m_songPlaying == true && !(m_recordPlayer.getGlobalBounds().intersects(record.vinyl.getGlobalBounds()))) ||
+	if ((m_songPlaying == true && !m_mouseReleased && m_mouseDot.getGlobalBounds().intersects(record.vinyl.getGlobalBounds())) ||
 		record.hide)
 	{
+		if (m_vinylDropped)
+		{
+			m_vinylDropped = false;
+			std::cout << "vinyl picked up ";
+		}
 		m_purpleFoxTown.stop();
 		m_ghost.stop();
 		m_slipknot.stop();
 		m_djo.stop();
 		m_vypsanaFixa.stop();
 		m_depeche.stop();
-
 
 		m_songPlaying = false;
 	}

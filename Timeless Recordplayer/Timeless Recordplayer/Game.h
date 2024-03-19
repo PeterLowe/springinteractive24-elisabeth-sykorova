@@ -14,12 +14,11 @@
 #include "Record.h"
 
 const int ALBUM_NUM = 6;
-const int REVEAL_BY = 30; // multiplied by speed in album
 
-const int NORTH = 1;
-const int SOUTH = 2;
-const int EAST = 3;
-const int WEST = 4;
+//const int NORTH = 1;
+//const int SOUTH = 2;
+//const int EAST = 3;
+//const int WEST = 4;
 
 class Game
 {
@@ -55,17 +54,17 @@ private:
 	void setupMusic();
 	void setupBackground();
 
-	sf::Sound songs[ALBUM_NUM];
-	sf::Texture textures[ALBUM_NUM];
+	//sf::Sound songs[ALBUM_NUM];
+	//sf::Texture textures[ALBUM_NUM];
 
 
-	sf::RectangleShape square;
+	//sf::RectangleShape square;
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_ArialBlackfont; // font used by message
 	sf::Text m_welcomeMessage; // text used for message on screen
-	sf::Texture m_logoTexture; // texture used for sfml logo
-	sf::Sprite m_logoSprite; // sprite used for sfml logo
+	//sf::Texture m_logoTexture; // texture used for sfml logo
+	//sf::Sprite m_logoSprite; // sprite used for sfml logo
 	bool m_exitGame; // control exiting game
 
 
@@ -126,21 +125,13 @@ private:
 	sf::SoundBuffer m_vypsanaFixaBuffer;
 	sf::Sound m_vypsanaFixa;
 
-
-
-
 	bool m_songPlaying = false;
 
 	bool hidingSet = true;
 
-	const int MAX_REVEALED_BY = 30;
-
 	float frameCounter = 0;
 	int currentFrame = 0;
 	float frameIncrement = 0.052;
-
-
-	
 
 };
 

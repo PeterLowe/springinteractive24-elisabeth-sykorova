@@ -24,13 +24,13 @@ public:
 
 	float m_coverSideSize = 250.0f; // size of the album's side
 	sf::Vector2f m_coverPosition;
-	bool m_revealed = false;
 
 	bool m_revealAlbum = false;
 	int m_revealedBy = 0;
 
-	static const int ALBUM_NUM = 6;
 
 	sf::Texture m_albumsTexture;
+
+	const int MAX_REVEAL_BY = 30;
 
 };

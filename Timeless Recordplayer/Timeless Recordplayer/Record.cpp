@@ -48,7 +48,7 @@ void Record::followMouse(sf::Vector2f t_mousePosition)
 
 void Record::fadeOut()
 {
-	spriteColor.a -= 255 / RECORD_REVEAL_BY;
+	spriteColor.a -= 255 / MAX_REVEAL_BY;
 	m_vinylSprite.setColor(spriteColor);
 }
 

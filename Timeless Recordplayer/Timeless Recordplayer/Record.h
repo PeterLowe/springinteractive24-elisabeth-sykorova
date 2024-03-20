@@ -35,7 +35,7 @@ public:
 	sf::Color color = (sf::Color::Black);
 	sf::Color spriteColor = (sf::Color::White);
 
-	const int MAX_REVEAL_BY = 30;
+	const int MAX_REVEAL_BY = 20;
 
 
 };

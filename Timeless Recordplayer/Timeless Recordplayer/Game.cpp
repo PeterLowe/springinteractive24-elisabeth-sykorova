@@ -27,6 +27,7 @@ Game::Game() :
 		albums[index].setupCover(index); // first point of the first album relative to index
 	}
 
+	// all setups, happens once
 	record.setup();
 	setupRecordPlayer();
 	setupMusic();
@@ -101,7 +102,6 @@ void Game::processEvents()
 		if (sf::Event::MouseButtonReleased == newEvent.type)
 		{
 			processMouseReleased(newEvent);
-			m_mouseReleased = true;
 		}
 	}
 }
@@ -341,22 +341,22 @@ void Game::processMouseWheel(sf::Event t_event) // scrolling through records
 
 void Game::processMousePressed(sf::Event t_event)
 {
-	
+	m_mouseReleased = false;
+
 	if (record.revealed) // checks when getting vinyl (it has been revealed), if mouse is on it (later used for mouse following)
 	{
 		m_mouseOnVinyl = m_mouseDot.getGlobalBounds().intersects(record.vinyl.getGlobalBounds()); // true or false
 	}
-	m_mouseReleased = false;
 }
 
 void Game::processMouseReleased(sf::Event t_event)
 {
+	m_mouseReleased = true;
 
 	if (m_mouseDot.getGlobalBounds().intersects(albums[m_albumToReveal].m_cover.getGlobalBounds()) &&
 		record.revealed)
 	{
 			record.hide = true;
-
 	}
 
 	if (albums[m_albumToReveal].m_revealedBy == albums[m_albumToReveal].MAX_REVEAL_BY && //only if cover fully revealed
@@ -381,7 +381,7 @@ void Game::checkVinylPlayerCollision()
 		if (!m_vinylDropped) // makes the record disappear and reposition to a spot that makes sense for the rp texture vinyl (for picking up in the future)
 		{
 			m_vinylDropped = true;
-			std::cout << "vinyl dropped";
+
 			// circle shape
 			record.vinyl.setPosition(m_recordPlayer.getPosition().x + (m_recordPlayer.getSize().x)/ 2 - 50.0f, // 50.0f is offset for the texture to make sense
 									m_recordPlayer.getPosition().y + (m_recordPlayer.getSize().y) / 2);
@@ -433,13 +433,12 @@ void Game::checkVinylPlayerCollision()
 		}
 
 	}
-	if ((/*m_songPlaying == true &&*/ !m_mouseReleased && m_mouseDot.getGlobalBounds().intersects(record.vinyl.getGlobalBounds())) ||
+	if ((!m_mouseReleased && m_mouseDot.getGlobalBounds().intersects(record.vinyl.getGlobalBounds())) ||
 		record.hide)
 	{
 		if (m_vinylDropped)
 		{
 			m_vinylDropped = false;
-			std::cout << "vinyl picked up ";
 		}
 		m_purpleFoxTown.stop(); // make automatic somehow
 		m_ghost.stop();
@@ -459,10 +458,7 @@ void Game::checkVinylAlbumCollision()
 	{
 		record.hide = true;
 		m_holdingVinyl = false;
-
 	}
-
-
 }
 
 

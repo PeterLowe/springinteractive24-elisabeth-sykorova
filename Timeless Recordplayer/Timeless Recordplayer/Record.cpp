@@ -25,7 +25,7 @@ void Record::setup()
 
 void Record::moveRight()
 {
-	speed = { 5.0f,0.0f };
+	speed = { 7.0f,0.0f };
 	vinylPosition += speed;
 	vinyl.setPosition(vinylPosition);
 	m_vinylSprite.setPosition(vinylPosition);
@@ -34,7 +34,7 @@ void Record::moveRight()
 
 void Record::moveLeft()
 {
-	speed = { -5.0f,0.0f };
+	speed = { -7.0f,0.0f };
 	vinyl.setPosition(vinyl.getPosition() + speed);
 	m_vinylSprite.setPosition(vinyl.getPosition() + speed);
 

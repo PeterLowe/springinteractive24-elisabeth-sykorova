@@ -78,8 +78,7 @@ private:
 
 	
 
-	int m_albumToReveal = -1;
-	//int m_albumRevealed = -1;
+	int m_albumRevealed = -1;
 	bool m_getVinyl = false;
 	bool m_holdingVinyl = false;
 
@@ -105,13 +104,13 @@ private:
 	sf::SoundBuffer m_purpleFoxTownBuffer;
 	sf::Sound m_purpleFoxTown;
 
-	// Mutter - Rammstein
-	sf::SoundBuffer m_ghostBuffer;
-	sf::Sound m_ghost;
-
 	// Custer - Slipknot
 	sf::SoundBuffer m_slipknotBuffer;
 	sf::Sound m_slipknot;
+
+	// Ivan Trojan - Vypsana fixa
+	sf::SoundBuffer m_vypsanaFixaBuffer;
+	sf::Sound m_vypsanaFixa;
 
 	// Enjoy the Silence - Depeche Mode
 	sf::SoundBuffer m_depecheBuffer;
@@ -121,13 +120,13 @@ private:
 	sf::SoundBuffer m_djoBuffer;
 	sf::Sound m_djo;
 
-	// Ivan Trojan - Vypsana fixa
-	sf::SoundBuffer m_vypsanaFixaBuffer;
-	sf::Sound m_vypsanaFixa;
+	// Kiss the Go-Goat - Ghost
+	sf::SoundBuffer m_ghostBuffer;
+	sf::Sound m_ghost;
+
+	sf::Sound songs[ALBUM_NUM] = { m_purpleFoxTown, m_slipknot, m_vypsanaFixa, m_depeche, m_djo, m_ghost };
 
 	bool m_songPlaying = false;
-
-	bool hidingSet = true;
 
 	float frameCounter = 0;
 	int currentFrame = 0;

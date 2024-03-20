@@ -20,7 +20,7 @@ Game::Game() :
 	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "SFML Game" },
 	m_exitGame{false} //when true game will exit
 {
-	//setupFontAndText(); // load font 
+	setupFontAndText(); // load font 
 
 	for (int index = 0; index < ALBUM_NUM; index++) // setups all the covers based on the amount of albums declared
 	{
@@ -30,8 +30,9 @@ Game::Game() :
 	// all setups, happens once
 	record.setup();
 	setupRecordPlayer();
-	//setupMusic();
-	//setupBackground();
+	setupMusic();
+	setupBackground();
+	setupBox();
 }
 
 /// <summary>
@@ -117,6 +118,11 @@ void Game::processKeys(sf::Event t_event)
 	{
 		m_exitGame = true;
 	}
+
+	if (sf::Keyboard::I == t_event.key.code) // toggle instructions
+	{
+		m_showInstructions = !m_showInstructions;
+	}
 }
 
 /// <summary>
@@ -136,6 +142,13 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		albums[m_albumRevealed].moveUp();
 		albums[m_albumRevealed].m_revealedBy++;
+	}
+	else if (albums[m_albumRevealed].m_revealedBy == albums[m_albumRevealed].MAX_REVEAL_BY)
+	{
+		if (!m_holdingVinyl)
+		{
+			m_instructions.setString("CLICK  THE  CHOSEN  COVER  TO  TAKE  THE  VINYL  OUT");
+		}
 	}
 
 	for (int index = 0; index < ALBUM_NUM; index++) // if other albums have been fully or partially revealed but the revealing album has changed, hide
@@ -157,6 +170,7 @@ void Game::update(sf::Time t_deltaTime)
 			record.spriteColor.a = 255;
 			record.m_vinylSprite.setColor(record.spriteColor);
 			record.setupForRevealing = true;
+		
 		}
 		record.moveRight();
 
@@ -167,6 +181,11 @@ void Game::update(sf::Time t_deltaTime)
 		record.reveal = false;
 		record.revealed = true;
 		record.setupForHiding = false;
+
+		if (!m_holdingVinyl)
+		{
+			m_instructions.setString("CLICK  AND  HOLD  THE  VINYL  TO  MOVE  IT");
+		}
 	}
 
 	if (record.hide && record.revealedBy > 0)
@@ -215,10 +234,20 @@ void Game::render()
 	m_window.clear(sf::Color::White);
 	m_window.draw(m_backgroundSprite);
 
+	if (m_showInstructions)
+	{
+		m_window.draw(m_instructions);
+	}
+
+	if (m_songPlaying)
+	{
+		m_window.draw(m_songTitle);
+	}
+
 
 	m_window.draw(m_recordPlayerSprite);
 	//m_window.draw(m_recordPlayer); // recordplayer debug
-
+	m_window.draw(m_boxBackSprite);
 
 	for (int index = ALBUM_NUM - 1; index >= 0; index--)
 	{
@@ -231,6 +260,7 @@ void Game::render()
 		m_window.draw(albums[index].m_coverSprite);
 	}
 
+	m_window.draw(m_boxFrontSprite);
 
 
 	m_window.display();
@@ -241,18 +271,26 @@ void Game::render()
 /// </summary>
 void Game::setupFontAndText()
 {
-	if (!m_ArialBlackfont.loadFromFile("ASSETS\\FONTS\\ariblk.ttf"))
+	if (!m_font.loadFromFile("ASSETS\\FONTS\\VinylFont.ttf"))
 	{
 		std::cout << "problem loading arial black font" << std::endl;
 	}
-	m_welcomeMessage.setFont(m_ArialBlackfont);
-	m_welcomeMessage.setString("SFML Game");
-	m_welcomeMessage.setStyle(sf::Text::Underlined | sf::Text::Italic | sf::Text::Bold);
-	m_welcomeMessage.setPosition(40.0f, 40.0f);
-	m_welcomeMessage.setCharacterSize(80U);
-	m_welcomeMessage.setOutlineColor(sf::Color::Red);
-	m_welcomeMessage.setFillColor(sf::Color::Black);
-	m_welcomeMessage.setOutlineThickness(3.0f);
+	// instructions
+	m_instructions.setFont(m_font);
+	m_instructions.setString("REVEAL  COVERS  USING  THE  SCROLL  WHEEL");
+	m_instructions.setPosition(20.0f,565.0f);
+	m_instructions.setFillColor(sf::Color::Black);
+	m_instructions.setCharacterSize(16U);
+	m_instructions.setStyle(sf::Text::Bold);
+
+	// song playing
+	m_songTitle.setFont(m_font);
+	m_songTitle.setString("  Everblue  Forest\nby  Purplefox  Town");
+	m_songTitle.setPosition(520.0f, 52.0f);
+	m_songTitle.setFillColor(sf::Color::Black);
+	m_songTitle.setCharacterSize(18U);
+	m_songTitle.setStyle(sf::Text::Bold);
+
 }
 
 
@@ -270,7 +308,12 @@ void Game::processMouseMovement(sf::Event t_event) // if mouse is moving
 		!(m_mouseDot.getGlobalBounds().intersects(albums[m_albumRevealed].m_cover.getGlobalBounds())))
 	{
 		record.followMouse(m_mouseEndVector);
-		m_holdingVinyl = true;
+
+		if (!m_holdingVinyl)
+		{
+			m_holdingVinyl = true;
+			m_instructions.setString("DRAG  THE  VINYL  ONTO  THE  RECORD  PLAYER  TO  PLAY  THE  TRACK");
+		}
 	}
 }
 
@@ -313,12 +356,12 @@ void Game::animateRecordplayer() // when music is playing, recordplayer changes 
 	if (currentFrame == 0)
 	{
 		m_recordPlayerSprite.setTexture(m_recordplayerActive1);
-		std::cout << "active 1" << std::endl;
+		m_songTitle.setPosition(520.0f, 52.0f);
 	}
 	else if (currentFrame == 1)
 	{
 		m_recordPlayerSprite.setTexture(m_recordplayerActive3);
-		std::cout << "active 3" << std::endl;
+		m_songTitle.setPosition(520.0f, 58.0f);
 	}
 
 	currentFrame = static_cast<int>(frameCounter);
@@ -404,6 +447,31 @@ void Game::checkVinylPlayerCollision()
 		}
 		
 		songs[m_albumRevealed].play();
+		songs[m_albumRevealed].setLoop(true);
+
+		switch (m_albumRevealed)
+		{
+		case 0:
+			m_songTitle.setString(" Everblue  Forest\nby  Purplefox  Town");
+
+			break;
+		case 1:
+			m_songTitle.setString("       Custer\n   by  Slipknot");
+			break;
+		case 2:
+			m_songTitle.setString("   Ivan Trojan\nby  Vypsana Fixa");
+			break;
+		case 3:
+			m_songTitle.setString("Enjoy the Silence\n by  Depeche Mode");
+			break;
+		case 4:
+			m_songTitle.setString("End of Beginning\n        by  Djo");
+			break;
+		case 5:
+			m_songTitle.setString("Kiss The Go Goat\n     by  Ghost");
+		}
+
+		m_instructions.setString("CLICK  AND  DRAG  THE  VINYL  BACK  TO  ITS  COVER  TO  PUT  IT  BACK");
 
 		m_songPlaying = true;
 
@@ -448,8 +516,8 @@ void Game::setupMusic() // loads song
 		std::cout << "problem loading ghost audio" << std::endl;
 	}
 
-	songs[1].setBuffer(m_ghostBuffer);
-	songs[1].setVolume(25.0f);
+	songs[5].setBuffer(m_ghostBuffer);
+	songs[5].setVolume(25.0f);
 
 
 	if (!m_slipknotBuffer.loadFromFile("ASSETS\\SOUNDS\\Custer.wav"))
@@ -457,8 +525,8 @@ void Game::setupMusic() // loads song
 		std::cout << "problem loading slipknot audio" << std::endl;
 	}
 
-	songs[2].setBuffer(m_slipknotBuffer);
-	songs[2].setVolume(20.0f);
+	songs[1].setBuffer(m_slipknotBuffer);
+	songs[1].setVolume(20.0f);
 
 
 	if (!m_depecheBuffer.loadFromFile("ASSETS\\SOUNDS\\EnjoyTheSilence.wav"))
@@ -483,8 +551,8 @@ void Game::setupMusic() // loads song
 		std::cout << "problem loading fixa audio" << std::endl;
 	}
 
-	songs[5].setBuffer(m_vypsanaFixaBuffer);
-	songs[5].setVolume(20.0f);
+	songs[2].setBuffer(m_vypsanaFixaBuffer);
+	songs[2].setVolume(20.0f);
 
 }
 
@@ -496,6 +564,38 @@ void Game::setupBackground()
 	}
 
 	m_backgroundSprite.setTexture(m_backgroundTexture);
+
+}
+
+void Game::setupBox()
+{
+	sf::Vector2f position = sf::Vector2f(albums[ALBUM_NUM-1].m_cover.getPosition().x - 238.0f, albums[ALBUM_NUM - 1].m_cover.getPosition().y - 100.0f);
+
+	//front
+	if (!m_boxFrontTexture.loadFromFile("ASSETS\\IMAGES\\boxFront.png"))
+	{
+		std::cout << "problem loading front box" << std::endl;
+	}
+
+	m_boxFrontSprite.setTexture(m_boxFrontTexture);
+	m_boxFrontSprite.setPosition(position);
+
+	if (!m_boxFrontTexture.loadFromFile("ASSETS\\IMAGES\\boxFront.png"))
+	{
+		std::cout << "problem loading front box" << std::endl;
+	}
+
+	m_boxFrontSprite.setTexture(m_boxFrontTexture);
+	m_boxFrontSprite.setPosition(position);
+
+	if (!m_boxBackTexture.loadFromFile("ASSETS\\IMAGES\\boxBack.png"))
+	{
+		std::cout << "problem loading back box" << std::endl;
+	}
+
+	m_boxBackSprite.setTexture(m_boxBackTexture);
+	m_boxBackSprite.setPosition(position);
+
 
 }
 

@@ -53,6 +53,8 @@ private:
 
 	void setupMusic();
 	void setupBackground();
+	
+	void setupBox();
 
 	//sf::Sound songs[ALBUM_NUM];
 	//sf::Texture textures[ALBUM_NUM];
@@ -61,10 +63,9 @@ private:
 	//sf::RectangleShape square;
 
 	sf::RenderWindow m_window; // main SFML window
-	sf::Font m_ArialBlackfont; // font used by message
-	sf::Text m_welcomeMessage; // text used for message on screen
-	//sf::Texture m_logoTexture; // texture used for sfml logo
-	//sf::Sprite m_logoSprite; // sprite used for sfml logo
+	sf::Font m_font; // font used by message
+	sf::Text m_instructions; // text used for instructions on screen
+	sf::Text m_songTitle;
 	bool m_exitGame; // control exiting game
 
 
@@ -86,6 +87,7 @@ private:
 	bool m_mouseOnVinyl = false;
 	bool m_vinylDropped = false;
 	bool m_hidingByDropping = false;
+	bool m_showInstructions = true;
 
 
 	sf::RectangleShape m_recordPlayer;
@@ -94,6 +96,12 @@ private:
 	sf::Texture m_recordplayerActive1;
 	sf::Texture m_recordplayerActive2;
 	sf::Texture m_recordplayerActive3;
+
+	sf::Sprite m_boxFrontSprite;
+	sf::Texture m_boxFrontTexture;
+
+	sf::Sprite m_boxBackSprite;
+	sf::Texture m_boxBackTexture;
 
 	sf::Sprite m_backgroundSprite;
 	sf::Texture m_backgroundTexture;

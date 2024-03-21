@@ -1,6 +1,8 @@
 /// <summary>
 /// by Elisabeth Sykorova
+/// March 2024
 /// </summary>
+
 #ifndef GAME_HPP
 #define GAME_HPP
 /// <summary>
@@ -13,12 +15,7 @@
 #include "Album.h"
 #include "Record.h"
 
-const int ALBUM_NUM = 6;
-
-//const int NORTH = 1;
-//const int SOUTH = 2;
-//const int EAST = 3;
-//const int WEST = 4;
+const int ALBUM_NUM = 6; // number of albums in the program
 
 class Game
 {
@@ -31,78 +28,69 @@ public:
 	void run();
 
 private:
-
+	// base
 	void processEvents();
 	void processKeys(sf::Event t_event);
 	void update(sf::Time t_deltaTime);
 	void render();
 
+	// setups
 	void setupFontAndText();
-	void processMouseMovement(sf::Event t_event);
-	//void setupAlbum(float t_firstPointX, float t_firstPointY);
+	void setupMusic();
+	void setupBackground();
+	void setupBox();
 	void setupRecordPlayer();
 	void animateRecordplayer();
 
-
+	// mouse events
+	void processMouseMovement(sf::Event t_event);
 	void processMouseWheel(sf::Event t_event);
 	void processMousePressed(sf::Event t_event);
 	void processMouseReleased(sf::Event t_event);
 
+	// collisions
 	void checkVinylPlayerCollision();
 	void checkVinylAlbumCollision();
-
-	void setupMusic();
-	void setupBackground();
-	
-	void setupBox();
-
-	//sf::Sound songs[ALBUM_NUM];
-	//sf::Texture textures[ALBUM_NUM];
-
-
-	//sf::RectangleShape square;
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_font; // font used by message
 	sf::Text m_instructions; // text used for instructions on screen
-	sf::Text m_songTitle;
+	sf::Text m_songTitle; // title of the song playing
 	bool m_exitGame; // control exiting game
 
 
 	Album albums[ALBUM_NUM];
-	Record record;
+	Record record; 
 
-	sf::Vector2i m_mouseEnd;
-	sf::Vector2f m_mouseEndVector;
-	sf::CircleShape m_mouseDot{1.0f};
-
-
-	
-
-	int m_albumRevealed = -1;
-	bool m_getVinyl = false;
-	bool m_holdingVinyl = false;
-
-	bool m_mouseReleased = true;
-	bool m_mouseOnVinyl = false;
-	bool m_vinylDropped = false;
-	bool m_hidingByDropping = false;
-	bool m_showInstructions = true;
+	sf::Vector2i m_mouseEnd; // gets the coordinates of the end of the mouse
+	sf::Vector2f m_mouseEndVector; // converts to vector
+	sf::CircleShape m_mouseDot{1.0f}; // used to check collisions
 
 
+	int m_albumRevealed = -1; // tracking the album currently revealed
+	bool m_holdingVinyl = false; // if the vinyl is held
+
+	bool m_mouseReleased = true; // if mouse is released or not
+	bool m_mouseOnVinyl = false; // if mouse is collided with vinyl
+	bool m_vinylDropped = false; // if mouse is placed onto the record player
+	bool m_showInstructions = true; // toggle show instructions
+
+	// record player
 	sf::RectangleShape m_recordPlayer;
 	sf::Sprite m_recordPlayerSprite;
 	sf::Texture m_recordPlayerTexture;
 	sf::Texture m_recordplayerActive1;
 	sf::Texture m_recordplayerActive2;
-	sf::Texture m_recordplayerActive3;
 
+	// vinyl box
+	// front
 	sf::Sprite m_boxFrontSprite;
 	sf::Texture m_boxFrontTexture;
-
+	//back
 	sf::Sprite m_boxBackSprite;
 	sf::Texture m_boxBackTexture;
 
+	// background
 	sf::Sprite m_backgroundSprite;
 	sf::Texture m_backgroundTexture;
 
@@ -132,10 +120,13 @@ private:
 	sf::SoundBuffer m_ghostBuffer;
 	sf::Sound m_ghost;
 
+	// array for songs
 	sf::Sound songs[ALBUM_NUM] = { m_purpleFoxTown, m_slipknot, m_vypsanaFixa, m_depeche, m_djo, m_ghost };
 
-	bool m_songPlaying = false;
 
+	bool m_songPlaying = false; // if song is playing
+
+	// frame animating
 	float frameCounter = 0;
 	int currentFrame = 0;
 	float frameIncrement = 0.05;

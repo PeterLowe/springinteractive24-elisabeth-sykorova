@@ -1,3 +1,8 @@
+/// <summary>
+/// by Elisabeth Sykorova
+/// March 2024
+/// </summary>
+
 #include "Album.h"
 
 
@@ -6,23 +11,21 @@ Album::Album()
 
 }
 
-
+/// <summary>
+/// sets up the cover
+/// </summary>
 void Album::setupCover(int index)
 {
 
-	/*int red = (rand() % 256) + 1; int green = (rand() % 256) + 1;
-	int blue = (rand() % 256) + 1; int opacity = 255;*/ // debug
+	sf::Vector2f coverPosition = { 350.0f - (index * 13.0f), 520.0f - (index * 34.0f) };
+	// first pos is {350.0f, 520.0f}, magic pos i decided to be the one
+	// 13.0f is x offset, 34.0f is y offset (the way they are stacked one after the other)
 
-	sf::Vector2f coverPosition = { 350.0f - (index * 13.0f), 520.0f - (index * 34.0f)}; // first pos is {350.0f, 520.0f}, magic pos i decided to be the one
-
-	// setup
 	m_cover.setPosition(coverPosition);
-	m_coverSprite.setPosition(300.0f, 300.0f);
 
 	m_cover.setOrigin(m_coverSideSize, m_coverSideSize);
 	m_coverSprite.setOrigin(m_coverSideSize, m_coverSideSize);
 
-	//m_cover.setFillColor(sf::Color(red, green, blue, opacity)); //debug
 	m_cover.setSize(sf::Vector2f(m_coverSideSize, m_coverSideSize));
 
 	// sprite, texture
@@ -44,6 +47,9 @@ void Album::setupCover(int index)
 	m_coverSprite.setTextureRect(sf::IntRect(firstX, firstY, secondX, secondY));
 }
 
+/// <summary>
+/// moves the album up
+/// </summary>
 void Album::moveUp()
 {
 	speed = { 0.0f, -3.0f };
@@ -54,6 +60,9 @@ void Album::moveUp()
 
 }
 
+/// <summary>
+/// moves the album down
+/// </summary>
 void Album::moveDown()
 {
 	speed = { 0.0f, 3.0f };

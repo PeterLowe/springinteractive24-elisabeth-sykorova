@@ -1,5 +1,14 @@
+/// <summary>
+/// by Elisabeth Sykorova
+/// March 2024
+/// </summary>
+
 #include "Record.h"
 
+
+/// <summary>
+/// setup record
+/// </summary>
 void Record::setup()
 {
 
@@ -23,6 +32,9 @@ void Record::setup()
 
 }
 
+/// <summary>
+/// moves right
+/// </summary>
 void Record::moveRight()
 {
 	speed = { 7.0f,0.0f };
@@ -32,6 +44,9 @@ void Record::moveRight()
 
 }
 
+/// <summary>
+/// moves left
+/// </summary>
 void Record::moveLeft()
 {
 	speed = { -7.0f,0.0f };
@@ -40,12 +55,18 @@ void Record::moveLeft()
 
 }
 
+/// <summary>
+/// changes position to position of mouse cursor
+/// </summary>
 void Record::followMouse(sf::Vector2f t_mousePosition)
 {
 	vinyl.setPosition(t_mousePosition);
 	m_vinylSprite.setPosition(t_mousePosition);
 }
 
+/// <summary>
+/// lowers opacity
+/// </summary>
 void Record::fadeOut()
 {
 	spriteColor.a -= 255 / MAX_REVEAL_BY;

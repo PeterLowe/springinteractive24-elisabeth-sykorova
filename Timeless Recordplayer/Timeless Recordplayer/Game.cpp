@@ -17,7 +17,7 @@
 /// load and setup thne image
 /// </summary>
 Game::Game() :
-	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "SFML Game" },
+	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "Timeless Record Player by E.S." },
 	m_exitGame{false} //when true game will exit
 {
 	setupFontAndText(); // load font 
@@ -449,27 +449,37 @@ void Game::checkVinylPlayerCollision()
 		songs[m_albumRevealed].play();
 		songs[m_albumRevealed].setLoop(true);
 
+
+		// frame increment = (googled) BPM/60/60
 		switch (m_albumRevealed)
 		{
 		case 0:
 			m_songTitle.setString(" Everblue  Forest\nby  Purplefox  Town");
-
+			frameIncrement = 0.052; 
 			break;
 		case 1:
 			m_songTitle.setString("       Custer\n   by  Slipknot");
+			frameIncrement = 0.091; 
 			break;
 		case 2:
-			m_songTitle.setString("   Ivan Trojan\nby  Vypsana Fixa");
+			m_songTitle.setString("    Ivan Trojan\nby  Vypsana Fixa");
+			frameIncrement = 0.066f; 
 			break;
 		case 3:
-			m_songTitle.setString("Enjoy the Silence\n by  Depeche Mode");
+			m_songTitle.setString("Enjoy  the  Silence\n by  Depeche  Mode"); // formating using spaces 
+			frameIncrement = 0.0627f; 
 			break;
 		case 4:
-			m_songTitle.setString("End of Beginning\n        by  Djo");
+			m_songTitle.setString("End  of  Beginning\n        by  Djo");
+			frameIncrement = 0.044f; 
 			break;
 		case 5:
-			m_songTitle.setString("Kiss The Go Goat\n     by  Ghost");
+			m_songTitle.setString("Kiss  The  Go  Goat\n     by  Ghost");
+			frameIncrement = 0.072f; 
+			break;
 		}
+
+		frameCounter = 0;
 
 		m_instructions.setString("CLICK  AND  DRAG  THE  VINYL  BACK  TO  ITS  COVER  TO  PUT  IT  BACK");
 
@@ -493,7 +503,7 @@ void Game::checkVinylPlayerCollision()
 void Game::checkVinylAlbumCollision()
 {
 	if (albums[m_albumRevealed].m_cover.getGlobalBounds().intersects(record.vinyl.getGlobalBounds())
-		&& m_mouseReleased /*&& !record.reveal*/ && m_holdingVinyl)
+		&& m_mouseReleased && m_holdingVinyl)
 	{
 		record.hide = true;
 		m_holdingVinyl = false;

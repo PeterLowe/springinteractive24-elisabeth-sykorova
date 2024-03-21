@@ -138,7 +138,7 @@ private:
 
 	float frameCounter = 0;
 	int currentFrame = 0;
-	float frameIncrement = 0.052;
+	float frameIncrement = 0.05;
 
 };
 

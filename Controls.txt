@@ -1,0 +1,15 @@
+Timeless Record Player Controls:
+--------------------------------
+Revealing album - Scroll with mouse wheel
+
+Revealing vinyl - Click on the revealed cover
+
+Moving vinyl - Click, hold and drag
+
+Playing music - Dragging the vinyl onto the record player and releasing the mouse button
+
+Putting the vinyl back	- Click and hold the vinyl on the record player, move it to the revealed album
+			- Click the revealed album (faster option)
+
+Toggle displaying instructions (if distracting) - Press <I>
+--------------------------------

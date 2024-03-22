@@ -10,8 +10,6 @@
 #include "Game.h"
 #include <iostream>
 
-
-
 /// <summary>
 /// default constructor
 /// setup the window properties
@@ -288,7 +286,7 @@ void Game::setupFontAndText()
 
 	// song playing
 	m_songTitle.setFont(m_font);
-	m_songTitle.setString("  Everblue  Forest\nby  Purplefox  Town");
+	m_songTitle.setString("");
 	m_songTitle.setPosition(520.0f, 52.0f);
 	m_songTitle.setFillColor(sf::Color::Black);
 	m_songTitle.setCharacterSize(18U);

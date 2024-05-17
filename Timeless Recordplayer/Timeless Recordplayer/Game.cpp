@@ -138,17 +138,19 @@ void Game::update(sf::Time t_deltaTime)
 	checkVinylPlayerCollision(); // checks if vinyl is on record player - plays music if true
 	checkVinylAlbumCollision();
 
-	if (albums[m_albumRevealed].m_revealAlbum &&
-		albums[m_albumRevealed].m_revealedBy < albums[m_albumRevealed].MAX_REVEAL_BY) // moves up record until revealed or switched
-	{
-		albums[m_albumRevealed].moveUp();
-		albums[m_albumRevealed].m_revealedBy++;
-	}
-	else if (albums[m_albumRevealed].m_revealedBy == albums[m_albumRevealed].MAX_REVEAL_BY)
-	{
-		if (!m_holdingVinyl)
+	if (m_albumRevealed != NO_ALBUM_REVEALED) {
+		if (albums[m_albumRevealed].m_revealAlbum &&
+			albums[m_albumRevealed].m_revealedBy < albums[m_albumRevealed].MAX_REVEAL_BY) // moves up record until revealed or switched
 		{
-			m_instructions.setString("CLICK  THE  CHOSEN  COVER  TO  TAKE  THE  VINYL  OUT");
+			albums[m_albumRevealed].moveUp();
+			albums[m_albumRevealed].m_revealedBy++;
+		}
+		else if (albums[m_albumRevealed].m_revealedBy == albums[m_albumRevealed].MAX_REVEAL_BY)
+		{
+			if (!m_holdingVinyl)
+			{
+				m_instructions.setString("CLICK  THE  CHOSEN  COVER  TO  TAKE  THE  VINYL  OUT");
+			}
 		}
 	}
 

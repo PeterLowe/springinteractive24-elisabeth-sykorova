@@ -67,8 +67,8 @@ private:
 	sf::Vector2f m_mouseEndVector; // converts to vector
 	sf::CircleShape m_mouseDot{1.0f}; // used to check collisions
 
-
-	int m_albumRevealed = -1; // tracking the album currently revealed
+	static constexpr int NO_ALBUM_REVEALED = -1; // magical constant for no album revealed
+	int m_albumRevealed = NO_ALBUM_REVEALED; // tracking the album currently revealed
 	bool m_holdingVinyl = false; // if the vinyl is held
 
 	bool m_mouseReleased = true; // if mouse is released or not
